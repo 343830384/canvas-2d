@@ -1,0 +1,393 @@
+/*  蓝图  */
+
+
+#blueprint{
+
+}
+/* 事件类型列表 */
+.lu_bar{
+   position:relative;
+   min-width:1366px;
+   height:30px;
+   line-height:30px;
+   background:rgb(185,187,168);
+}
+.lu_bar button{
+   display:inline-block;
+   float:left;
+   margin-left:20px;
+   margin-top:3px;
+   width:120px;
+   height:24px;
+   line-height:24px;
+   text-align:center;
+   font-size:12px;
+   font-weight:bolder;
+   border-radius:4px;
+}
+.lu_bar button:active{
+    background:rgb(165,165,165);
+    color:red;
+}
+/*事件 选择 区域 */
+.lu_list_area{
+    widows:100%;
+    height:auto;
+}
+.lu_list_bar{
+   width:100%;
+   margin-top:-5px;
+   height:auto;
+   background:rgb(83,84,71);
+}
+.lu_list_bar::after{
+   display:block;
+   width:100%;
+   height:6px;
+   content:'';
+   /* background:rgb(83,84,71); */
+}
+.lu_list_bar span{
+     display:block;
+     margin-top:6px;
+     margin-left:16px;
+     width:80px;
+     height:20px;
+     padding-left:4px;
+     line-height:20px;
+     font-size:13px;
+     font-weight:bolder;
+     border-radius:6px;
+     /* background:rgb(227,231,198); */
+}
+.lu_list_bar button{
+     display:inline-block;
+     margin-top:6px;
+     margin-left:16px;
+     width:100px;
+     height:20px;
+     line-height:20px;
+     font-size:12px;
+     font-weight:bolder;
+     border-radius:8px;
+     overflow:hidden;
+}
+.lu_list_bar button:active{
+     background:rgb(253,199,186);
+}
+/*  增删改查 ,  类型创建储存区域  */
+.lu_crud_lx{
+    margin-top:6px;
+    width:100%;
+    min-height:80px;
+    background:rgb(182,198,184);
+}
+.lu_crud_lx *{
+     position:relative;
+     float:left;
+     display:inline-block;
+     height:20px;
+     line-height:20px;
+     margin-left:6px;
+     font-size:12px;
+     font-weight:bolder;
+     text-overflow:ellipsis;
+}
+
+
+/*  蓝图线路图部分  */
+.lu_out{
+   position:relative;
+   margin-top:6px;
+   min-width:1000px;
+   height:1000px;
+   overflow:hidden;
+   background:rgb(210,212,216);
+   text-align:center;
+}
+.lu_content{
+     position:absolute;
+     min-width:1920px;
+     min-height:1000px;
+     transform:translate(0px,0px) scale(1,1);
+     background:rgb(139,173,248);
+}
+.lu_svg{
+   position:absolute;
+   display:block;
+   width:100%;
+   height:100%;
+   pointer-events:none;
+   z-index:1;
+}
+/* 模块 dom 取材处 */
+.lu_dom_area{
+   position:relative;
+   margin-top:6px;
+   width:100%;
+   height:3000px;
+   background:rgb(204,239,248);
+   text-align:center;
+}
+/* 
+地图:  227,231,198
+UI:    238,165,238
+NPC:   177,169,249
+任务:  247,177,158
+物品:  158,247,174
+基本:  140,237,251
+*/
+.lu_c_dt{
+  background:rgb(227,231,198);
+}
+.lu_c_ui{
+   background:rgb(238,165,238);
+ }
+ .lu_c_npc{
+   background:rgb(177,169,249);
+ }
+ .lu_c_rw{
+   background:rgb(247,177,158);
+ }
+ .lu_c_wp{
+   background:rgb(158,247,174);
+ }
+ .lu_c_jb{
+   background:rgb(140,237,251);
+ }
+ /* 基本大模块 区域~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/* 物品基本 */
+ .lu_wp{
+   position:absolute;
+   width:200px;
+   min-height:20px;
+   left:20px;
+   top:20px;
+ }
+/* 物品触发器 */
+.lu_wp_cfq{
+   position:absolute;
+   width:200px;
+   min-height:20px;
+   left:300px;
+   top:20px;
+}
+/* 物品属性 */
+.lu_wp_sx{
+   position:absolute;
+   width:200px;
+   min-height:20px;
+   left:540px;
+   top:20px;
+}
+/* 物品属性生成模块 */
+.lu_wp_sxsc{
+   position:absolute;
+   width:200px;
+   min-height:20px;
+   left:770px;
+   top:20px;
+}
+/* map 基本模块 */
+.lu_map{
+   position:absolute;
+   width:200px;
+   min-height:20px;
+   left:20px;
+   top:330px;
+}
+.lu_map_cfq{
+   position:absolute;
+   width:200px;
+   min-height:20px;
+   left:300px;
+   top:200px;
+}
+.lu_map_dtXg{
+   position:absolute;
+   width:200px;
+   min-height:20px;
+   left:530px;
+   top:200px;
+}
+.lu_map_tqXg{
+   position:absolute;
+   width:200px;
+   min-height:20px;
+   left:780px;
+   top:200px;
+}
+.lu_map_yxXg{
+   position:absolute;
+   width:200px;
+   min-height:20px;
+   left:1020px;
+   top:200px;
+}
+/* 以下为 通用部分~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`*/
+/* 通用可移动模块 */
+.lu_mk{
+   background:rgb(206,206,206);
+ }
+ .lu_mk *{
+    position:relative;
+    float:left;
+    display:inline-block;
+    height:20px;
+    line-height:20px;
+    font-size:12px;
+    font-weight:bolder;
+    margin-left:4px;
+    margin-top:4px;
+    text-overflow:ellipsis;
+ }
+ /* 文字隐藏 ,用于无法自动省略号的 */
+ .lu_mk_text{
+   white-space: nowrap; 
+   overflow: hidden;
+ }
+
+ /* 通用标题 */
+ .lu_mk_bt{
+    margin-left:0;
+    margin-top:0;
+    width:100%;
+    text-align:center;
+    padding-right:20px;
+ }
+ /* 通用关闭 */
+ .lu_mk_close{
+    position:absolute;
+    right:0;
+    top:0;
+    margin-top:0;
+    width:20px;
+    height:20px;
+    color:red;
+ }
+ /* 实际数据区域~~~~~~~~ */
+ /* 选项区域 */
+ .lu_mk_area{
+   width:200px;
+   height:auto;
+   margin-left:0;
+ }
+ /* 属性区域 */
+ .lu_mk_atr{
+    width:200px;
+    height:auto;
+    margin-left:0;
+    background:rgb(190,191,184);
+ }
+ .lu_mk_atr::after{
+   display: block;
+   content:' ';
+   clear:both;
+   height:10px;
+ }
+ /* 分隔行  撑开float*/
+ .lu_mk_fgx{
+    width:100%;
+    height:1px;
+    clear:both;
+ }
+ /* 滚动区 */
+ .lu_mk_scroll{
+   float:none !important;
+   width:220px;
+   height:160px; 
+   margin-left:0;
+   overflow-x:hidden;
+   overflow-y:auto;
+ }
+ .lu_mk_scroll::-webkit-scrollbar{
+    width:0;
+ }
+ /* 行分隔 */
+ .lu_mk_clear{
+   clear:both;
+}
+ /* 数据行 */
+ .lu_mk_line{
+   float:none !important;
+   width:100%;
+   height:auto;
+   margin-left:0;
+ }
+ .lu_mk_line::before{
+    display: block;
+    content:' ';
+    width:100%;
+    height:4px;
+    background:rgb(206,206,206);
+ }
+ .lu_mk_line:hover{
+    background:rgb(195,128,206);
+ }
+ .lu_mk_line:hover::after{
+    position:absolute;
+    display:block;
+    top:0px;
+    right:-20px;
+    width:20px;
+    height:20px;
+    content:'✖';
+    color:red;
+    background:rgb(162,215,191);
+ }
+ /* 连线器~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+ /* 基本 */
+ .lu_lxq_jb{
+     width:11px;
+     height:11px;
+     margin-top:10px;
+     background:url(../img/蓝图小图/基本.png);
+ }
+ /* 逻辑 */
+ .lu_lxq_lj{
+   width:11px;
+   height:11px;
+   margin-top:10px;
+   background:url(../img/蓝图小图/逻辑.png);
+}
+/* 集线器 */
+.lu_lxq_jxq{
+   width:11px;
+   height:11px;
+   margin-top:10px;
+   background:url(../img/蓝图小图/集线器.png);
+}
+/* 计算 */
+.lu_lxq_js{
+   width:11px;
+   height:11px;
+   margin-top:10px;
+   background:url(../img/蓝图小图/计算.png);
+}
+/* 输出 */
+.lu_lxq_sc{
+   width:11px;
+   height:11px;
+   margin-top:10px;
+   background:url(../img/蓝图小图/输出.png);
+}
+/* 交互 */
+.lu_lxq_jh{
+   width:11px;
+   height:11px;
+   margin-top:10px;
+   background:url(../img/蓝图小图/交互.png);
+}
+/* 按键 */
+.lu_lxq_aj{
+   width:11px;
+   height:11px;
+   margin-top:10px;
+   background:url(../img/蓝图小图/按键.png);
+}
+/* 未连接的模块 */
+.lu_lxq_none{
+   width:13px;
+   height:17px;
+   background:url(../img/蓝图小图/未使用.png);
+}

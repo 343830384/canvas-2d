@@ -1,0 +1,116 @@
+/* 
+地图 事件编辑器
+*/
+#em_{
+  position:absolute;
+  width:500px;
+  height:600px;
+  background:rgb(215,234,215);
+  top:100px;
+  left:40px;
+  border:1px solid black;
+}
+
+/* 类别 */
+.em_class{
+  position: relative;
+  margin-top:4px;
+  width:100%;
+  height:30px;
+  line-height:30px;
+  background:rgb(200,200,209);
+}
+.em_class *{
+  display: inline-block;
+  width:80px;
+  height:20px;
+  margin-left:20px;
+  line-height:20px;
+  font-size:12px;
+  font-weight:bolder;
+  
+}
+/*  */
+.em_map{
+  position: relative;
+  margin-top:4px;
+  width:100%;
+  height:30px;
+  line-height:30px;
+  background:rgb(198,195,248);
+}
+.em_map *{
+  display: inline-block;
+  height:20px;
+  line-height:20px;
+  margin-left:10px;
+  line-height:20px;
+  font-size:12px;
+  /* font-weight:bolder; */
+}
+/* 事件添加区域 */
+.em_tj{
+  margin-top:3px;
+  width:100%;
+  height:30px;
+  line-height:30px;
+  background:rgb(154,154,154);
+}
+.em_tj *{
+  display: inline-block;
+  height:20px;
+  line-height:20px;
+  margin-top:4px;
+  margin-left:10px;
+  line-height:20px;
+  font-size:12px;
+  font-weight:bolder;
+}
+.em_tj button{
+   width:60px;
+   border-radius:5px;
+}
+.em_tj button:active{
+    background:rgb(244,83,105) !important;
+}
+/* 事件编辑区域 */
+.em_area{
+  position:relative;
+  width:100%;
+  height:506px;
+  background:rgb(177,212,222);
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+.em_line{
+   width:100%;
+   background:rgb(216,216,220);
+   margin-top:3px;
+}
+.em_line::after{
+   display:block;
+   content:'';
+   width:100%;
+   height:4px;
+}
+.em_line *{
+  position:relative;
+  display: inline-block;
+  height:20px;
+  line-height:20px;
+  margin-top:4px;
+  margin-left:10px;
+  line-height:20px;
+  font-size:12px;
+  font-weight:bolder;
+}
+.em_line input{
+   margin-left:2px;
+}
+.em_line select{
+  width:80px;
+  margin-left:2px;
+}
+.em_line input[type=checkbox]{
+  top:6px;margin-left:2px
+}

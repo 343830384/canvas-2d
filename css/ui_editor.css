@@ -1,0 +1,144 @@
+/* 
+开发工具专用 UI编辑样式
+
+*/
+/* 编辑器 样式选择区*/
+
+/* 
+
+
+
+/* 编辑器 取材区 和 添加区 ############################################################################*/
+ #ui_editor{
+    position:absolute;
+    width:400px;
+    height:800px;
+    background:rgb(215,234,215);
+    top:100px;
+    border:1px solid black;
+}
+.ui_create{
+    position:relative;
+    margin-top:3px;
+    width:100%;
+    height:40px;
+    background:rgb(163,163,163);
+}
+.ui_drag_area{
+    position:relative;
+    margin-top:3px;
+    width:100%;
+    height:218px;
+    background:#F7F7FB;
+}
+.ui_list_area{
+    position: relative;
+    margin-top:3px;
+    width:100%;
+    height:200px;
+    background:rgb(116,3,130);
+    overflow-x:hidden;
+    overflow-y:auto;
+}
+/* .ui_list_area::-webkit-scrollbar{
+    width:10px;
+} */
+.ui_id_list{
+    position:relative;
+    margin-top:4px;
+    width:100%;
+    height:40px;
+    background:rgb(90,98,149);
+}
+.ui_option_area{
+   position:relative;
+   margin-top:4px;
+   width:100%;
+   height:300px;
+   background:rgb(174,176,160);
+   overflow-y:auto;
+   overflow-x:hidden;
+}
+/* .ui_option_area::-webkit-scrollbar{
+   display:none;
+} */
+/*ui 编辑菜单结束~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+
+ /* ui 编辑面板 */
+ .ui_game{
+    position:absolute;
+    width:400px;
+    height:400px;
+}
+
+/* 其下为编辑面板内的 基本模块 */
+ /* 模块 万能区 #####################################################################################*/
+  .mk_txt{
+      position: absolute;
+      display: block;
+      width:fit-content;
+      height:18px;
+      line-height:18px;
+      font-size:12px;
+      font-weight:bold;
+      text-align:center;
+      border:1px solid red;
+      overflow: hidden;
+  }
+  /* 模块 基本按钮 */
+  .mk_btn{
+      position: absolute;
+      display: block;
+      width:fit-content;
+      height:18px;
+      line-height:18px;
+      font-size:12px;
+      font-weight:bold;
+      text-align:center;
+      /* border-radius:5px; */
+      /* border:1px solid black; */
+      overflow:hidden;
+  }
+  /* .mk_btn:active{
+      background:rgb(205,163,159);
+  } */
+  /* 通用基本 input 输入框 */
+  .mk_input{
+      position: absolute;
+      display:block;
+      width:80px;
+      height:18px;
+      line-height:18px;
+      font-size:13px;
+      /* font-weight:bold; */
+  }
+  /* 模块 文本域 ,不显示滚动条,但是可向下滚动 */
+  .mk_txtarea{
+       position: absolute;
+       display:block;
+       resize:none;
+       font-size:13px;
+       font-weight: bold;
+       letter-spacing:-1px;
+       overflow-y:auto;
+  }
+  .mk_txtarea::-webkit-scrollbar{
+      display:none;
+  }
+  .mk_txtarea:hover{
+     cursor:default;
+  }
+
+  /* 带垂直滚动条的  容器区  */
+  .mk_container{
+      position: absolute;
+      font-size:12px;
+      font-weight:bold;
+      border:1px solid black;
+      overflow-x:hidden;
+      overflow-y:auto;
+  }
+
+ /* 模块 万能区 END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~S*/
+

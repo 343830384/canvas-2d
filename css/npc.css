@@ -1,0 +1,193 @@
+#npc_{
+  position:absolute;
+  width:600px;
+  height:674px;
+  background:rgb(215,234,215);
+  top:100px;
+  left:40px;
+  border:1px solid black;
+  /* z-index:auto !important; */
+}
+/* 列表创建区 */
+.npc_list{
+   position:relative;
+   width:100%;
+   background:rgb(187,198,187);
+}
+.npc_list *{
+  display: inline-block;
+  height:20px;
+  margin-top:4px;
+  margin-left:20px;
+  line-height:20px;
+  font-size:12px;
+  font-weight:bolder;
+}
+.npc_list::after{
+  display:block;
+  content:'';
+  width:100%;
+  height:4px;
+}
+/* 显示npc的区域 */
+.npc_show{
+  position:relative;
+  width:100%;
+  height:420px;
+  background:rgb(201,201,201);
+  overflow:hidden;
+  /* background-image: url(../img/小图_杂/平铺.png);
+  background-size: 20px 20px;
+  background-repeat: repeat; */
+}
+/* map格背景 */
+.npc_map{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background-image: url(../img/辅助图/0.png);
+  background-size:40px 40px;
+  background-repeat: repeat;
+}
+/* solid格背景 */
+.npc_solid{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background-image: url(../img/辅助图/3.png);
+  background-size:40px 40px;
+  background-repeat: repeat;
+}
+/* npc 渲染添加范围  600 , 420 */
+.npc_add{
+  position:absolute;
+  width:100%;
+  height:100%;
+  left:200px;
+  bottom:60px;
+  border-left:1px solid black;
+  border-bottom:1px solid black;
+  background:rgba(239,239,244,.5);
+}
+.npc_add img{
+   position:absolute;
+}
+/* Npc中轴线 */
+.npc_mid{
+   position:absolute;
+   width:1px;
+   height:100%;
+   left:20px;
+   /* border-left:1px dashed rgb(227,19,6); */
+   border-left:1px dashed rgb(227,19,6);
+   pointer-events:none;
+}
+/* npc buf 状态位置 提示点 */
+.npc_buf{
+  position:absolute;
+  width:8px;
+  height:8px;
+  bottom:80px;
+  left:20px;
+  margin-left:-4px;
+  margin-bottom:-4px;
+  background:rgb(213,27,3);
+  pointer-events:none;
+}
+
+
+/* 参数修改区 */
+.npc_cfg{
+  position:relative;
+  margin-top:3px;
+  width:100%;
+  height:170px;
+  background:rgb(204,204,204);
+}
+.npc_cfg *{
+  display: inline-block;
+  height:20px;
+  margin-top:4px;
+  margin-left:8px;
+  line-height:20px;
+  font-size:12px;
+  font-weight:bolder;
+}
+.npc_cfg input{
+  margin-left:4px;
+}
+.npc_cfg input[type=text]{
+  width:32px;
+}
+.npc_cfg input[type=checkbox]{
+  position:relative;
+  width:14px;
+  height:14px;
+  top:3px;
+}
+.npc_cfg button{
+  position:relative;
+  padding-left:2px;
+  padding-right:2px;
+  top:1px;
+}
+.npc_lx_check input{
+    margin-left:10px;
+}
+
+
+
+
+/*  npc  装备区域   */
+.npc_zb{
+   position:absolute;
+   bottom:0;
+   left:600px;
+   width:400px;
+   height:400px;
+   background:rgb(204,204,204);
+   border:1px solid rgb(5,188,19); 
+}
+.npc_zb *{
+    display: inline-block;
+    height:20px;
+    margin-top:4px;
+    margin-left:8px;
+    line-height:20px;
+    font-size:12px;
+    font-weight:bolder;
+}
+/* 装备img 容器 */
+.npc_zb_img_rq{
+    margin-left:0;
+    margin-top:4px;
+    border:1px solid red;
+    width:100%;
+    height:80px;
+    background-image: url(../img/小图_杂/平铺.png);
+    background-size:40px 40px;
+    background-repeat: repeat;
+    overflow-x: hidden;
+    overflow-y:auto;
+}
+.npc_zb_img_rq img{
+  float:left;
+  margin-left:8px;
+  margin-top: 4px;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+.npc_zb_xz{
+    margin-left:0;
+}
+.npc_zb_xz span{
+   margin-left:4px;
+}
+
+.npc_zb_xz input[type=checkbox]{
+    position:relative;
+    top:5px;
+    margin-left:1px;
+}

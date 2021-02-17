@@ -1,0 +1,56 @@
+#eqp_{
+  position:absolute;
+  width:600px;
+  /* height:400px; */
+  background:rgb(215,234,215);
+  top:100px;
+  left:40px;
+  border:1px solid black;
+  /* z-index:auto !important; */
+}
+/* 块-参数区 */
+.eqp_cfg{
+   position:relative;
+   width:100%;
+   height:100px;
+   margin-top:2px;
+   background:rgb(220,217,217);
+}
+.eqp_cfg *{
+   display:inline-block;
+   height:20px;
+   line-height:20px;
+   margin-left:8px;
+   margin-top:4px;
+   font-size:12px;
+   font-weight:bolder;
+}
+.eqp_cfg input[type=checkbox]{
+   position:relative;
+   width:13px;
+   height:13px;
+   top:2px;
+   left:-5px;
+}
+/* 块 准备图片展示区 */
+.eqp_img{
+    position: relative;
+    margin-top:4px;
+    width:100%;
+    height:200px;
+    background-image: url(../img/小图_杂/平铺.png);
+    background-size:40px 40px;
+    background-repeat: repeat;
+    overflow-x: hidden;
+    overflow-y:auto;
+}
+
+.eqp_img img{
+    float:left;
+    margin-left:8px;
+    margin-top: 4px;
+    vertical-align: middle;
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}

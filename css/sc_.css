@@ -1,0 +1,223 @@
+/* 
+素材分类 模板
+*/
+
+/* 素材 */
+#sc_{
+
+}
+/* 读取素材模块 */
+.sc_hq{
+    margin-top:60px;
+    width:1200px;
+    height:400px;
+}
+/* 文件列表显示区域 */
+.sc_list{
+   position:relative;
+   width:100%;
+   height:360px;
+   background-image:url(../img/小图_杂/平铺.png);
+   background-size:20px 20px;
+   background-repeat:repeat;
+   overflow-x: hidden;
+   overflow-y: auto;
+   z-index:11;
+   border-radius:6px;
+}
+
+/* 读取素材列表区   */
+.sc_list_div{
+   display:block;
+   float:left;
+   width:60px;
+   height:90px;
+   text-align:center;
+   margin-left:10px;
+   margin-top:6px;
+}
+.sc_img_div{
+     width:60px;
+     height:60px;
+     line-height:60px;
+     /* text-align:center; */
+     /* border:1px solid red; */
+}
+.sc_img_div img{
+    vertical-align: middle;
+    width:40px;
+    height:40px;
+    object-fit: contain;
+}
+.sc_list_div span{
+    display: block;
+    width:100%;
+    height:30px;
+    /* text-align:left; */
+    font-size:12px;
+    text-overflow:ellipsis;
+}
+/* 
+#####################################################################
+下册 分类列表
+*/
+.sc_img_fl{
+    position:relative;
+    width:1200px;
+    height:600px;
+    background:#7E7E81;
+}
+.sc_fl_ts{
+    width:100%;
+    height:40px;
+    line-height:40px;
+    margin-top:4px;
+    font-size:14px;
+    font-weight:bolder;
+    text-align:center;
+    color:#800404;
+    background:rgb(184,184,187);
+    border-radius:6px;
+}
+/* 目录分级列表容器 ~~~~~~~~~~~~~~~~~~~~~~~*/
+.sc_zc_list{
+    position:absolute;
+    width:300px;
+    height:470px;
+    top:102px;
+    left:20px;
+    border-radius:6px;
+    background:rgb(234,233,233);
+    overflow-x:hidden;
+    overflow-y:auto;
+}
+
+/* 每个大类级 */
+.sc_file{
+    position:relative;
+    width:100%;
+    margin-top:8px;
+    /* margin-left:20px; */
+    /* height:auto; */
+    min-height:40px;
+    overflow:hidden;
+    background:rgb(225,251,230);
+}
+.sc_file::after{
+    display:block;
+    content:'';
+    width:100%;
+    height:5px;
+    background:rgb(225,251,230);
+}
+.sc_flie_1{
+    position:relative;
+    display:inline-block;
+    margin-left:26px;
+    width:100px;
+    height:auto; 
+    vertical-align:middle;
+    /* border:1px solid skyblue; */
+}
+/* 二级目录收缩 */
+.sc_zk_ss{
+    height:24px;
+    visibility:hidden;
+}
+.sc_file span{
+      position:relative;
+      display:block;
+      margin-top:5px;
+      width:100px;
+      height:24px;
+      line-height:24px;
+      font-size:13px;
+      font-weight:bold;
+      text-align:left;
+      padding-left:4px;
+      /* vertical-align:middle; */
+      /* background:rgb(254,187,184); */
+}
+.sc_file span:hover{
+     color:red;
+     background:rgb(254,187,184);
+}
+.sc_file span::before{
+       position:absolute;
+       display: block;
+       content:'';
+       top:3px;
+       left:-15px;
+       width:14px;
+       height:14px;
+       background:url(../img/功能小图标/文件夹.png);
+}
+.sc_first::after{
+    position:absolute;
+    display: block;
+    content:'▶';
+    top:0;
+    right:-13px;
+}
+.sc_zoom{/* 缩放  + - 切换 */
+    position:absolute;
+    width:20px;
+    height:20px;
+    line-height:20px;
+    right:22px;
+    top:50%;
+    margin-top:-10px;
+    font-size:20px;
+    color:#0707F9;
+    font-weight:bold;
+}
+.sc_zoom:hover{
+    cursor:pointer;
+    color:red;
+}
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/* 已拖拽选中的目录 */
+.sc_xz_ml{
+    position:absolute;
+    width:600px;
+    height:470px;
+    top:102px;
+    left:350px;
+    background-image:url(../img/小图_杂/平铺.png);
+    background-size:20px 20px;
+    background-repeat:repeat;
+    border-radius:6px;
+    overflow-x:hidden;
+    overflow-y:auto;
+}
+.sc_img_atr{
+    position:absolute;
+    width:200px;
+    height:470px;
+    top:102px;
+    right:20px;
+    color:#0808CA;
+    border-radius:6px;
+    background:rgb(184,184,187);
+}
+.sc_img_atr span{
+     position:absolute;
+     display:block;
+     width:40px;
+     height:20px;
+     line-height:20px;
+   
+     font-size:12px;
+     font-weight:bold;
+}
+.sc_img_atr input{
+    position:absolute;
+    display:block;
+    width:40px;
+    height:20px;
+    line-height:20px;
+
+    font-size:12px;
+    font-weight:bold;
+    /* border:1px solid red; */
+}

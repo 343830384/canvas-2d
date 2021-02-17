@@ -1,0 +1,109 @@
+/* 地图编辑器素材取材 面板*/
+
+#map_sc_xzq{
+    position:absolute;
+    width:600px;
+    min-height:600px;
+    background:rgb(215,234,215);
+    top:100px;
+    left:40px;
+    border:1px solid black;
+}
+
+/* 模块分区 */
+.map_sc_mk{
+    position:relative;
+    width:100%;
+    margin-top:4px;
+    background:rgb(187,198,187);
+    border-radius:5px;
+}
+.map_sc_mk button{
+    width:74px;
+    height:20px;
+    margin-top:4px;
+    margin-left:6px;
+    line-height:20px;
+    font-size:12px;
+    font-weight:bold;
+    text-align:center; 
+}
+
+/* 目录树*/
+.map_sc_tree{
+    position: relative;
+    width:100%;
+    height:302px;
+    border:1px solid rgb(98,116,99);
+}
+/* 选中的属性区 */
+.map_sx_mk{
+   position:relative;
+   width:100%;
+   /* height:60px; */
+   background:rgb(187,198,187);
+   border-radius:5px;
+}
+.map_sx_mk::after{
+    content:'';
+    display:block;
+    clear: both;
+    height:12px;
+}
+.map_sx_mk div{
+    float:left;
+    display:inline-block;
+    margin-top:4px;
+    width:fit-content;
+    height:20px;
+    line-height:20px;
+}
+.map_sx_mk span{
+    display:inline-block;
+    width:fit-content;
+    height:20px;
+    padding-left:4px;
+    padding-right:4px;
+    line-height:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+.map_sx_mk input{
+    position:relative;
+    display:inline-block;
+    width:30px;
+    height:20px;
+    line-height:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+/* 普通图片和资源列表 */
+.map_sc_img_zy{
+    position:relative;
+    width:100%;
+    height:302px;
+    border-radius:5px;
+    border:1px solid rgb(98,116,99);
+}
+/* .map_sc_mk span{
+    position: absolute;
+    width:40px;
+    height:20px;
+    line-height:20px;
+    text-align:left;
+}
+.map_sc_mk div{
+    position: absolute;
+    width:40px;
+    height:20px;
+    line-height:20px;
+    text-align:left;
+}
+.map_sc_mk input{
+    position: absolute;
+    width:40px;
+    height:20px;
+    line-height:20px;
+    text-align:left;
+} */

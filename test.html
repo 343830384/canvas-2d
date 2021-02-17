@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试</title>
+</head>
+<body>
+
+
+
+    
+</body>
+</html>
+<script>
+
+/* var obj={
+    name:'小张',
+    objAge:this.age,
+    myFun:function(fm,t){
+        // console.log(this.name+' 年龄'+this.age,"  来自"+fm+" 去往 "+t);
+        console.log(this==db);
+        console.log(this)
+    }
+}
+var db={
+    name:"德玛",
+    age:99
+};
+obj.myFun.call(null,'成都','上海'); */
+
+var BF=0; //0:不播放 ,1:暂停,2:播放
+var DH=requestAnimationFrame;
+var Dh=function(){
+    //  map.
+     if(BF===2){//播放 (通知map绘制)
+         console.log('1');
+     }else if(BF===1){//暂停 (通知map暂停 ) 同时修改 BF=0
+        console.log('2');
+     };
+     DH(Dh);  
+}; 
+DH(Dh); 
+</script>

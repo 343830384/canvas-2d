@@ -1,0 +1,69 @@
+/* 
+ 初始界面 创建 项目列表
+*/
+
+#project{
+}
+
+.p_body{
+    position:absolute;
+    width:800px;
+    height:1000px;
+    left:50%;
+    top:50%;
+    margin-left:-400px;
+    margin-top:-500px;
+    border-radius:12px;
+    background:rgb(104,104,106);
+}
+.p_list{
+   position:absolute;
+   width:250px;
+   height:920px;
+   top:60px;
+   left:14px;
+   background:rgb(201,201,221);
+   border-radius:12px;
+   overflow-x:hidden;
+   overflow-y:auto;
+}
+.p_p_name{
+    margin-top:12px;
+    width:100%;
+    height:20px;
+    line-height:20px;
+    font-size:14px;
+    font-weight:bold;
+    text-align:center;
+}
+.p_p_name:hover{
+    color:rgb(217,39,6);
+}
+.p_body input{
+    position:absolute;
+    left:302px;
+    width:300px;
+    height:24px;
+    border-radius:4px;
+}
+.p_body span{
+    position:absolute;
+    display:block;
+    left:622px;
+    /* width:100px; */
+    line-height:24px;
+    text-align:left;
+    border-radius:4px;
+    color:#CBDE05;
+}
+.p_body button{
+    position:absolute;
+    display:block;
+    left:622px;
+    width:120px;
+    line-height:24px;
+    text-align:center;
+    /* border-radius:4px; */
+    color:#034349;
+    font-weight:bold;
+}

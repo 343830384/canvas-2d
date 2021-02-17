@@ -1,0 +1,100 @@
+*{
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+    user-select:none;
+}
+html,body{height:100%;}
+::-webkit-scrollbar{
+    width:10px;
+}
+::-webkit-scrollbar-thumb{
+    background-color:rgb(31,37,68);
+}
+body{
+    background:rgb(166,182,166);
+    min-width:1200px;
+}
+/* 全屏背景 用于 素材 事件等的面板调整  */
+.big_bg{
+    background:rgb(143,144,136);
+    width:100%;
+    height:100%;
+    position:absolute;
+    z-index:11;
+}
+/* 标题栏 包含 移动,标题,缩放,开关 #############################################################*/
+.ui_bt{
+    width:100%;
+    height:24px;
+    background-image: url(../img/模块相关/标题背景.png);
+    background-repeat:repeat-x;
+ }
+ .ui_bt_move{
+    position:absolute;
+    left:0;
+    width:24px;
+    height:24px;
+    background-image:url(../img/模块相关/标题_移动.png); 
+ }
+ .ui_bt_bt{
+     width:fit-content;
+     height:24px;
+     line-height:24px;
+     font-size:16px;
+     font-weight:bold;
+     text-align:center;
+     padding-left:4px;
+     padding-right:4px;
+     background:rgb(216,216,216);
+     border-radius:5px;
+ }
+ .ui_bt_close{
+     position: absolute;
+     right:0;
+     top:0; 
+     width:24px;
+     height:24px;
+     background-image:url(../img/模块相关/标题_关闭.png); 
+ }
+ .ui_bt_zoom{
+     position: absolute;
+     right:36px;
+     top:0; 
+     width:24px;
+     height:24px;
+     background-image:url(../img/模块相关/缩放.png); 
+ }
+ /* 标题栏 END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/* 右下角提示框 最上层 */
+#tips{
+    position:fixed;
+    right:1px;
+    bottom:1px;
+    width:340px;
+    height:240px;
+    background:#D8D8D8;
+    /* text-indent:2em; */
+    font-size:13px;
+    font-weight:bold;
+    letter-spacing:-1px;
+    line-height:18px;
+    color:#611009;
+    padding:5px 5px 5px 5px;
+    border:1px solid black;
+    overflow-x:hidden;
+    overflow-y:auto;
+    resize:none;
+    z-index:999;
+    display:none;
+   
+}
+/* 右下角提示框 END*/
+
+
+/* 通用 缩小 class */
+.ty_zoom_sx{
+    height:24px !important;
+    min-height:24px !important;;
+    overflow:hidden;
+}

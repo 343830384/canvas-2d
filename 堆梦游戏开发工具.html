@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv='cache-control'  id='html_cache' />
+    <title>UI按钮构建器</title>
+    <link rel="icon" href="data:;base64,="> <!-- 禁止请求 favicon.ico  -->
+    <link rel="stylesheet" href="./css/project.css"><!-- 初始界面 -->
+    <link rel="stylesheet" href="./css/main.css"> <!-- 背景 -->
+    <link rel="stylesheet" href="./css/ui_menubar.css"> <!--菜单栏 -->
+    <link rel="stylesheet" href="./css/ui_editor.css"> <!-- UI 编辑器 -->
+    <link rel="stylesheet" href="./css/game_area.css"><!--  地图编辑器 区 -->
+    <link rel="stylesheet" href="./css/sc_.css"> <!--  素材分类  -->
+    <link rel="stylesheet" href="./css/scbj_.css"> <!-- 素材编辑 (合成图 以及 动图)  -->
+    <link rel="stylesheet" href="./css/map_sc_selector.css"><!-- map素材取材器 --> 
+    <!-- <link rel="stylesheet" href="./css/blueprint.css">蓝图 (暂废)-->
+    <link rel="stylesheet" href="./css/e_map.css"> <!-- 地图事件编辑器 -->
+    <link rel="stylesheet" href="./css/npc.css"><!-- npc编辑器 -->
+    <link rel="stylesheet" href="./css/equip.css"><!-- equip装备编辑器 -->
+    <style>
+    </style>
+</head>
+<body>
+  <!--
+     行内元素
+     drag='1'  可拖拽元素 dragDom='0'  ,0:自身,1:父元素,2:父父元素....依次类推    
+  -->
+  <!-- 初始界面选择项目 -->   
+ <div id='project' class="big_bg" style="display:block;">
+        <div class="p_body">
+              <!-- 左侧列表 -->
+               <div class="p_list">
+                    <div e-for='project' class="p_p_name"><div e-event='ondblclick:select_xm'>{{name}}</div></div>
+               </div>
+               <input type="text" style="top:71px;" placeholder='项目名称:不能包含 / \ : * " < > [ ] | ' e-id='name'>
+               <span style="top:71px">项目名称</span>
+               <input type="text" style="top:121px;" placeholder='项目保存在已创建的文件夹, 如:d:\demo' e-id='path'>
+               <span style="top:121px">存储路径</span>
+               <button style="bottom:30px;" e-event='onclick:create'>创建(新)</button> 
+        </div>
+ </div>
+  
+ <!-- 头部界面条    ui:对应的domDd  wz:(left:top) 默认唤出位置,若有 -->
+ <div id='menubar'>
+     <ul>
+         <li>素材</li>
+         <li ui='sc_'>素材导入</li>
+     </ul>
+     <ul>
+        <li>编辑</li>
+        <li ui='scbj_'>组合动画</li>
+    </ul>
+     <ul>
+        <li>资源</li>
+        <li ui='map_sc_xzq' wz='0;100px'>资源选择器</li>
+       <!--  <li>资源编辑器</li>
+        <li>物品_编辑</li>
+        <li>技能_编辑</li>
+        <li>特效_编辑</li>
+        <li>NPC_编辑</li> -->
+    </ul>
+    <ul>
+        <li>UI</li>
+        <li ui='ui_editor' wz='0;100px'>UI编辑器</li>
+    </ul>
+    <ul>
+        <li>逻辑</li>
+        <li>物品_数值逻辑</li>
+        <li>UI_数值逻辑</li>
+        <li>任务_逻辑</li>
+        <li>NPC_逻辑</li>
+    </ul>
+    <ul>
+        <li>事件</li>
+        <li>物品_事件编辑</li>
+        <li>音频_事件编辑</li>
+        <li>地图_事件编辑</li>
+    </ul>
+    <ul>
+        <li>工具类</li>
+        <li>取色器</li>
+        <li>火柴人骨骼系统</li>
+        <li>火柴人装备系统</li>
+    </ul>
+ </div>   
+
+<!-- 地图编辑器 游戏实机场景区 (附:map_xy_data.js 左和下侧 工具条) -->
+ <div id='game_area' e-event='onfocus:game_jh;onblur:game_zt' tabindex="99">
+     <!-- 参数栏 -->
+    <div class="game_bar" e-base='map_cfg'>
+            <!-- 读取地图列表,村村创建等等 -->
+            <div>
+                 <span style="color:#09D215;">地图ID:</span>
+                 <input type="text" style="width:28px" disabled e-change='id'>
+                 <span style="color:#09D215;">地图名称:</span>
+                 <input type="text" style="width:132px;" e-change='name'>
+                 <span style="color:#09D215;">地图列表:</span>
+                 <select e-event='onchange:list_change' e-id='map_list'>
+                         <option e-for='list' e-attr='id=id'>{{name}}</option>
+                 </select>
+                 <button style="margin-left:112px;" e-event='onclick:save_map'>存储地图</button>
+                 <button style="margin-left:10px;" e-event='onclick:cj_map'>创建新图</button>
+                 <button style="margin-left:10px;" e-event='ondblclick:del_map'>删除地图</button>
+            </div>
+            <div style="display: block;width: 100%;height:1px;"></div>
+            <!-- 程序和游戏窗口参数 -->
+            <div tip=1>
+                <span style="color:#09D215;">程序窗口 :</span>
+                <span style="margin-left:5px;">宽</span>
+                <input type="text" style="width:40px;" e-change='zw'>
+                <span style="margin-left:5px;">高</span>
+                <input type="text" style="width:40px;" e-change='zh'>
+                <span style="color:#B204BB">|</span>
+            </div>
+            <div tip=2>
+                <span style="color:#09D215;">游戏窗口 :</span>
+                <span style="margin-left:5px;">宽</span>
+                <input type="text" style="width:40px;" e-change='w'>
+                <span style="margin-left:5px;">高</span>
+                <input type="text" style="width:40px;" e-change='h'>
+                <!-- <span style="margin-left:5px;">ph</span>
+                <input type="text" style="width:40px;" e-change='ph'>  暂无 ,完全居中-->
+            </div>
+            <div tip=3>
+                <span style="color:#09D215;">视角 :</span>
+                <span style="margin-left:5px;">正</span>
+                <input type="checkbox" checked e-event='onclick:sjqh' e-id='sj_z' sj=1>
+                <span style="margin-left:5px;">斜</span>
+                <input type="checkbox" e-event='onclick:sjqh' e-id='sj_x' sj=0>
+                <span style="color:#B204BB">|</span>
+            </div>
+            <!-- <div style="display:block;width:100%;height:10px;"></div> -->
+            <div tip=4>
+                <span style="color:#09D215;">地图单位 :</span>
+                <span style="margin-left:5px;">宽</span>
+                <input type="text" style="width:30px;" e-change='mw'>
+                <span style="margin-left:5px;">高</span>
+                <input type="text" style="width:30px;" e-change='mh'>
+                <span style="color:#B204BB">|</span>
+            </div>
+            <div tip=5>
+                <span style="color:#09D215;">逻辑单位 :</span>
+                <span style="margin-left:5px;">宽</span>
+                <input type="text" style="width:30px;" e-change='sw'>
+                <span style="margin-left:5px;">高</span>
+                <input type="text" style="width:30px;" e-change='sh'>
+                <span style="color:#B204BB">|</span>
+            </div>
+            <div tip=6>
+                <span style="color:#09D215;">地图单位面积 :</span>
+                <input type="text" style="width:60px;"  value='100X100' disabled e-change='map_size'>
+                <span style="color:#09D215;">逻辑单位面积 :</span>
+                <input type="text" style="width:60px;"  value='100X100' disabled e-change='solid_size'>
+                <span style="color:#B204BB">|</span>
+            </div>
+            <div style="display: block;width: 100%;height:1px;"></div><!--  -->
+            <div tip=7>
+                <span style="color:#09D215;">地图行 :</span>
+                <span style="margin-left:5px;">上</span>
+                <input type="checkbox" lx=0 e-event='onclick:map_size'>
+                <span style="margin-left:5px;">下</span>
+                <input type="checkbox" lx=1 e-event='onclick:map_size' checked >
+                <button lx=0 e-event='onclick:map_bg' >增加</button>
+                <button lx=1 e-event='onclick:map_bg'>删除</button>
+                <span style="color:#B204BB">|</span>
+            </div>
+            <div tip=8>
+                <span style="color:#09D215;">地图列 :</span>
+                <span style="margin-left:5px;">左</span>
+                <input type="checkbox" lx=2 e-event='onclick:map_size'>
+                <span style="margin-left:5px;">右</span>
+                <input type="checkbox" lx=3 e-event='onclick:map_size' checked>
+                <button lx=2 e-event='onclick:map_bg'>增加</button>
+                <button lx=3 e-event='onclick:map_bg'>删除</button>
+                <span style="color:#B204BB">|</span>
+            </div>
+            <div style="display: block;width: 100%;height:1px;"></div><!--  -->
+            <!-- <div>
+                <span style="color:#09D215;">工具资源类 :</span>
+                <span style="margin-left:5px;">资源</span>
+                <input type="checkbox">
+                <span style="color:#B204BB">|</span>
+            </div> -->
+            <div style="display: block;width: 100%;height:1px;"></div><!--  -->
+            <!-- 显示开关参数 -->
+            <div>
+                <span style="color:#09D215;">显示开关1 :</span>
+                <span style="margin-left:5px;">UI面板</span>
+                <input type="checkbox">
+                <span style="margin-left:5px;">地图网格</span>
+                <input type="checkbox" checked e-event='onclick:showOff' show=1>
+                <span style="margin-left:5px;">逻辑网格</span>
+                <input type="checkbox" checked e-event='onclick:showOff' show=2>
+            </div>
+            <div style="display: block;width: 100%;height:1px;"></div>
+            <!-- floor层区域  -->
+             <div>
+                <span style="color:#09D215;">当前编辑层 :</span>
+                <input type="checkbox" style="margin-left:14px;" class="app_d0" e-event='onclick:floor_cz' lx=0>
+                <span style="margin-left:0;">0f</span>
+                <input type="checkbox" style="margin-left:14px;" checked class="app_d0" e-event='onclick:floor_cz' lx=1>
+                <span style="margin-left:0;">1f</span>
+                <input type="checkbox" style="margin-left:14px;" class="app_d0" e-event='onclick:floor_cz' lx=2>
+                <span style="margin-left:0;">2f</span>
+                <input type="checkbox" style="margin-left:14px;" class="app_d0" e-event='onclick:floor_cz' lx=3>
+                <span style="margin-left:0;">3f</span>
+                <input type="checkbox" style="margin-left:14px;" class="app_d0" e-event='onclick:floor_cz' lx=4>
+                <span style="margin-left:0;">4f</span>
+            </div>
+            <div style="margin-left:80px;">
+                <span style="color:#09D215;">显示中的层 :</span>
+                <input type="checkbox" style="margin-left:14px;" checked class="app_d0" e-event='onclick:floor_cz' lx=5>
+                <span style="margin-left:0;">0f</span>
+                <input type="checkbox" style="margin-left:14px;" checked class="app_d0" e-event='onclick:floor_cz' lx=6>
+                <span style="margin-left:0;">1f</span>
+                <input type="checkbox" style="margin-left:14px;" checked class="app_d0" e-event='onclick:floor_cz' lx=7>
+                <span style="margin-left:0;">2f</span>
+                <input type="checkbox" style="margin-left:14px;" checked class="app_d0" e-event='onclick:floor_cz' lx=8>
+                <span style="margin-left:0;">3f</span>
+                <input type="checkbox" style="margin-left:14px;" checked class="app_d0" e-event='onclick:floor_cz' lx=9>
+                <span style="margin-left:0;">4f</span>
+            </div>
+            <div style="display: block;width: 100%;height:1px;"></div>
+            <div>
+                <span style="color:#09D215;">坐标提示 :</span>
+                <span style="margin-left:14px;">地图</span>
+                <input type="text " readonly style="width:60px;" e-id='map_xy'>
+                <span style="margin-left:14px;">逻辑</span>
+                <input type="text " readonly style="width:60px;" e-id='solid_xy'>
+            </div>
+    </div>
+    <!-- 实际/实机 画面-->
+    <div id='game_main' e-event='onmousedown:draw_dj;onmousemove:draw_ts'>
+          <canvas width="800" height="600" id='game_yx'></canvas>    <!-- 游戏层 -->
+          <canvas width="800" height="600" id='game_tq'></canvas>     <!-- 游戏特殊渲染层 (特殊全屏2d 天气)(浮在最上面的) -->
+          <canvas width="800" height="600" id='game_floor'></canvas><!--   楼层路径标记层 -->
+          <canvas width="800" height="600" id='game_map_fz'></canvas>  <!-- 辅助 map格子层 -->
+          <canvas width="800" height="600" id='game_solid_fz'></canvas><!-- 辅助 逻辑格子层 -->
+          
+          <!-- 各种ui面板 投放区域 -->
+    </div>
+  
+   <!-- 左侧 列表 点击地图  (eng 后添加)-->
+  <!-- <div class='map_list'>
+            <div class='map_lx'>地表</div>
+            <div class='map_lb_sj'>
+                <div class='map_id_xz' e-for='map'>
+                    <eng e-event='onclick:list_dj' e-attr='index=$_index' lx=0>
+                        <span>{{lx}}</span><span>- id</span><span>{{id}}</span>
+                    </eng>
+                </div>
+            </div>
+            <div class='map_lx'>实体</div>
+            <div class='map_lb_sj'>
+                <div class='map_id_xz' e-for='solid'>
+                    <eng e-event='onclick:list_dj' e-attr='index=$_index' lx=1>
+                        <span>{{lx}}</span><span>- id</span><span>{{id}}</span>
+                </eng>
+                </div>
+            </div>
+            <div class='map_lx'>音频</div>
+            <div class='map_lb_sj'>
+                <div class='map_id_xz' e-for='audio'>
+                    <eng e-event='onclick:list_dj' e-attr='index=$_index' lx=2>
+                        <span>{{lx}}</span><span>- id</span><span>{{id}}</span>
+                    </eng>
+                </div>
+            </div>
+    </div> -->
+       <!-- 列表选择对应属性 -->
+        <!-- <div class='m_l_opt_area'>
+                <div class='m_l_opt' style='display:none;' e-base='img'>
+                    <span>类型:</span><input type='text' disabled style='width:80px' e-change='lx'>
+                    <span>id:</span><input type='text' disabled e-change='id'>
+                    <span>楼层:</span><input type='text' e-change='f' e-event='onfocus:no_defocus'>
+                    <span>宽:</span><input type='text' e-change='w' disabled>
+                    <button e-event='onclick:wh_xg' style='width:20px;' a=0,>+</button><button e-event='onclick:wh_xg' style='width:20px;' a=1>-</button>
+                    <span>高:</span><input type='text' e-change='h' disabled>
+                    <button e-event='onclick:wh_xg' style='width:20px;' a=2>+</button><button e-event='onclick:wh_xg' style='width:20px;' a=3>-</button>
+                    <span>X:</span><input type='text' e-change='x' disabled>
+                    <span>Y:</span><input type='text' e-change='y' disabled>
+                    <div style='height:6px;clear: both;'></div>
+                        <button style='margin-left:132px;' e-event='onclick:move' m=0>左移</button>
+                        <button e-event='onclick:move' m=1>右移</button>
+                        <button e-event='onclick:move' m=2>上移</button>
+                        <button e-event='onclick:move' m=3>下移</button>
+                    <button class='m_ld_del' e-event='onclick:btn_del'>删除</button>
+                    <button class='m_ld_up' e-event='onclick:btn_up'>上</button>
+                    <button class='m_ld_down' e-event='onclick:btn_down'>下</button>
+                </div>
+                <div class='m_l_opt' style='display:none;' e-base='img_dh'>
+                        <span>类型:</span><input type='text' disabled style='width:80px' e-change='lx'>
+                        <span>id:</span><input type='text' disabled e-change='id'>
+                        <span>楼层:</span><input type='text' e-change='f' e-event='onfocus:no_defocus'>
+                        <span>帧数:</span><input type='text' style='width:30px;' e-change='fn' disabled>
+                        <span>帧序/时:</span><input type='text' style='width:300px;font-size:12px;' e-change='fxj' e-id='dom_fxj' e-event='onfocus:no_defocus'>
+                        <div style='height:1px;clear: both;'></div>
+                        <span style='margin-left:136px;'>X:</span><input type='text' e-change='x' disabled>
+                        <span>Y:</span><input type='text' e-change='y' disabled>
+                        <div style='height:1px;clear: both;'></div>
+                        <button style='margin-left:132px;' e-event='onclick:move' m=0>左移</button>
+                        <button e-event='onclick:move' m=1>右移</button>
+                        <button e-event='onclick:move' m=2>上移</button>
+                        <button e-event='onclick:move' m=3>下移</button>
+                        <button class='m_ld_del' e-event='onclick:btn_del'>删除</button>
+                        <button class='m_ld_up' e-event='onclick:btn_up'>上</button>
+                        <button class='m_ld_down' e-event='onclick:btn_down'>下</button>
+                </div>
+                <div class='m_l_opt' style='display:none;' e-base='yp'>
+                        <span>类型:</span><input type='text' disabled style='width:80px' e-change='lx'>
+                        <span>id:</span><input type='text' disabled e-change='id'>
+                        <span>静默:</span><input type='checkbox' style='width:20px;' e-event='onclick:yp_check' yx=0 class='dom_yp_check'>
+                        <span>范围:</span><input type='text' style='width:28px;' e-change='fw'>
+                        <span>音量(0-100):</span><input type='text' style='width:28px;' e-change='yl'>
+                        <span>循环:</span><input type='checkbox' style='width:20px;' e-event='onclick:yp_check' yx=1 class='dom_yp_check'>
+                        <span>单次:</span><input type='checkbox' style='width:20px;' e-event='onclick:yp_check' yx=2 class='dom_yp_check'>
+                        <button class='m_ld_del' e-event='onclick:btn_del'>删除</button>
+                </div>
+        </div> -->
+ </div>
+
+<!-- ui 编辑器  -->
+<div id='ui_editor' style="display:none;">
+    <div class="ui_bt">
+         <div class="ui_bt_move" drag=1 dragDom=2></div>
+         <div class="ui_bt_bt">UI编辑器</div>
+         <div class="ui_bt_zoom"></div>
+         <div class="ui_bt_close" e-event='onclick:ui_close'></div>
+    </div>
+    <div class="ui_create">
+        <button class='mk_btn' e-event='ondblclick:cj_ui' style="left:20px;top:11px" tip=0>双击创建新UI窗口</button>
+        <span class="mk_txt" style="left:139px;top:10px;width:55px;border:0;">宽(数字):</span>
+        <input type="text" maxlength="4" class="mk_input" style="left:197px;top:11px;width:36px;" placeholder="400" tip=1>
+        <span class="mk_txt" style="left:248px;top:10px;width:55px;border:0;">高(数字):</span>
+        <input type="text" maxlength="4" class="mk_input" style="left:306px;top:11px;width:36px;" placeholder="400" tip=1>
+    </div>
+    <!-- 拖拽放置ui子元素 -->
+     <div class="ui_drag_area">
+            <span class="mk_txt" style="border:0;position:relative;color:#C93014;font-size:14px;background:#C8C8D1;">鼠标按住并拖拽下列 基本模块 到已创建的UI模板,进行布局操作</span>
+            <div class="mk_txt" style="width:100px;left:66px;top:50px;background:#FFC5C0;" e-event='ondragstart:dragStart' draggable='true' lx=1 tip=2>文本|按钮|图</div>
+            <button class='mk_btn' style="width:100px;left:232px;top:50px;background:#EAEAEA;" e-event='ondragstart:dragStart' draggable='true' lx=2 tip=3>按钮button</button>
+            <input type="text" class="mk_input" placeholder="基本输入框" style="width:100px;left:66px;top:80px;background:#53DED5;" e-event='ondragstart:dragStart' draggable='true' readonly lx=3 tip=4>
+            <textarea class="mk_txtarea" style="width:100px;height:50px;left:66px;top:110px;user-select:none;background:#E0F4E1;" e-event='ondragstart:dragStart' draggable='true' readonly lx=4 tip=5>文本域  大量文字表述</textarea>
+            <div class="mk_container" style="width:100px;height:50px;left:232px;top:110px;background:rgba(243,245,71,0.6);" e-event='ondragstart:dragStart' draggable='true' lx=5 tip=6>容器域   自动排列子元素的边界计算依据</div>
+     </div>
+     <!-- 所有ui 大模块列表 -->
+      <div class="ui_list_area">
+            <div class="ui_id_list" e-for='ui_mb' e-attr='index=$_index'>
+                <span class="mk_txt"  style="color: #CFE10B;border:0;left:4px;top:10px;">ui_id:</span>
+                <input type="text" class="mk_input" style="color: #CFE10B;border:0;left:46px;top:10px;width:26px;padding-left:2px;" disabled e-input='ui_id' tip=7>
+                <input type="text" class="mk_input" style="border:0;left:90px;top:10px;width:239px;padding-left:2px;" placeholder="一句话备注描述...." e-input='ui_bz'>
+                <input type="checkbox" class="mk_input" style="left:338px;top:10px;width:18px;" e-event='onchange:xz_ui' tip=8>
+                <button class='mk_btn' style="left:362px;top:10px;width:18px;" e-event='ondblclick:del_ui' tip=9>删</button>
+            </div>
+      </div>
+      <!-- 选中ui模块/元素 参数 -->
+      <div class="ui_option_area" e-base='ui_option'>
+            <br>
+            <button class='mk_btn' style="width:80px;left:30px;top:10px;height:20px;line-height:20px;" e-event='ondblclick:del_ui_zys' tip=66>双击删除</button>
+            <button class='mk_btn' style="width:80px;right:30px;top:10px;height:20px;line-height:20px;" e-event='ondblclick:tj_data' tip=61>双击提交修改</button>
+            <br><hr/><br>
+            <!-- 面板id ,元素id 以及基本描述 -->
+            <div>      
+                  <span class="mk_txt" style="border:0;left:8px;color: #0101BA;">元素id:</span>
+                  <input type="text" class="mk_input" style="left:50px;width:34px;" e-change='zId'  disabled tip=59>
+                  <span class="mk_txt" style="border:0;left:90px;color: #0101BA;">ui_id:</span>
+                  <input type="text" class="mk_input" style="left:125px;width:34px;" e-change='pId'  disabled tip=65>
+                  <span class="mk_txt" style="border:0;left:164px;color: #0101BA;">描述:</span>
+                  <input type="text" class="mk_input" style="left:194px;width:140px;" e-change='ms' tip=60>
+           </div> 
+           <br><br><hr/><hr/>
+          <!-- 基本参数 -->
+          <div e-base='basic'>
+                <span class="mk_txt" style="border:0;left:8px;color: #0101BA;">基本参数:</span>
+                <input type="checkbox" class="mk_input" style="left:75px;width:15px;" e-event='onchange:select' e-id='basic' disabled lx='basic' tip=10>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">宽:</span>
+                <input type="txt" class="mk_input" style="left:28px;width:35px;" e-change='w' tip=11>
+                <span class="mk_txt" style="border:0;left:65px;">高:</span>
+                <input type="txt" class="mk_input" style="left:81px;width:35px;" e-change='h' tip=12>
+                <span class="mk_txt" style="border:0;left:122px;">圆角:</span>
+                <input type="txt" class="mk_input" style="left:152px;width:20px;" e-change='yj' maxlength="2" tip=13>
+                <span class="mk_txt" style="border:0;left:179px;">左:</span>
+                <input type="txt" class="mk_input" style="left:196px;width:28px;" e-change='l' maxlength="4" tip=14>
+                <span class="mk_txt" style="border:0;left:226px;">上:</span>
+                <input type="txt" class="mk_input" style="left:242px;width:28px;" e-change='t' maxlength="4" tip=15>
+                <span class="mk_txt" style="border:0;left:274px;">右:</span>
+                <input type="txt" class="mk_input" style="left:290px;width:28px;" e-change='r' maxlength="4" tip=62>
+                <span class="mk_txt" style="border:0;left:323px;">下:</span>
+                <input type="txt" class="mk_input" style="left:340px;width:28px;" e-change='b' maxlength="4" tip=63>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">边框:</span>
+                <input type="txt" class="mk_input" style="left:38px;width:20px;" e-change='bk' maxlength='2' tip=16> 
+                <span class="mk_txt" style="border:0;left:64px;">颜色:</span>
+                <input type="txt" class="mk_input" style="left:93px;width:88px;" e-change='bs' tip=17>
+                <span class="mk_txt" style="border:0;left:186px;">禁止拖拽:</span>
+                <input type="checkbox" class="mk_input" style="left:208px;" e-attr='tz=tz' e-id='basic_tz' e-event='onchange:basic_tz' disabled tip=18>
+                <span class="mk_txt" style="border:0;left:262px;">禁止输入:</span>
+                <input type="checkbox" class="mk_input" style="left:284px;" e-attr='sr=sr' e-id='basic_sr' e-event='onchange:basic_sr' tip=19 disabled>  
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">相对偏移>></span>
+                <span class="mk_txt" style="border:0;left:83px;">左:</span>
+                <input type="txt" class="mk_input" style="left:100px;width:28px;" e-change='ml' tip=64>
+                <span class="mk_txt" style="border:0;left:133px;">上:</span>
+                <input type="txt" class="mk_input" style="left:150px;width:28px;" e-change='mt' tip=64> 
+                <span class="mk_txt" style="border:0;left:182px;">右:</span>
+                <input type="txt" class="mk_input" style="left:199px;width:28px;" e-change='mr' tip=64> 
+                <span class="mk_txt" style="border:0;left:233px;">下:</span>
+                <input type="txt" class="mk_input" style="left:250px;width:28px;" e-change='mb' tip=64> 
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">自动生成:</span>
+                <input type="txt" class="mk_input" style="left:62px;width:20px;" e-change='zd' maxlength="2" tip=20>
+                <span class="mk_txt" style="border:0;left:87px;">px:</span>
+                <input type="txt" class="mk_input" style="left:108px;width:20px;" e-change='px' tip=21>
+                <span class="mk_txt" style="border:0;left:133px;">py:</span>
+                <input type="txt" class="mk_input" style="left:154px;width:20px;" e-change='py' tip=22>
+          </div>
+          <br><hr/><br>
+          <!-- 文字参数 -->
+          <div e-base='font'>
+                <span class="mk_txt" style="border:0;left:8px;color: #0101BA;">文字:</span>
+                <input type="checkbox" class="mk_input" style="left:75px;width:15px;" e-event='onchange:select' e-id='font' disabled  lx='font' tip=23>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">字体:</span>
+                <input type="txt" class="mk_input" style="left:49px;width:41px;" e-change='zt' tip=24> 
+                <span class="mk_txt" style="border:0;left:96px;">大小:</span>
+                <input type="txt" class="mk_input" style="left:125px;width:21px;" e-change='dx' maxlength="2" tip=25> 
+                <span class="mk_txt" style="border:0;left:151px;">加粗:</span>
+                <input type="checkbox" class="mk_input" style="left:180px;width:18px;" e-attr='jc=jc' tip=26>
+                <span class="mk_txt" style="border:0;left:202px;">行高:</span>
+                <input type="txt" class="mk_input" style="left:232px;width:21px;" e-change='hg' maxlength="2" tip=27>
+                <span class="mk_txt" style="border:0;left:258px;">水平:</span>
+                <input type="txt" class="mk_input" style="left:287px;width:20px;" e-change='sp' maxlength="1" tip=28>
+                <span class="mk_txt" style="border:0;left:313px;">垂直:</span>
+                <input type="txt" class="mk_input" style="left:342px;width:20px;" e-change='cz' maxlength="1" tip=29>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">间距:</span>
+                <input type="txt" class="mk_input" style="left:49px;width:20px;" e-change='jj' maxlength="2" tip=30> 
+                <span class="mk_txt" style="border:0;left:72px;">颜色:</span>
+                <input type="txt" class="mk_input" style="left:102px;width:88px;" e-change='ys' tip=31> 
+                <span class="mk_txt" style="border:0;left:196px;">边填充:</span>
+                <input type="txt" class="mk_input" style="left:237px;width:98px;" e-change='bj' tip=32>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">更新频率:</span>
+                <input type="txt" class="mk_input" style="left:62px;width:35px;" e-change='pl' disabled maxlength="4" tip=33>
+                <span class="mk_txt" style="border:0;left:100px;">更新字数:</span>
+                <input type="txt" class="mk_input" style="left:153px;width:35px;" e-change='gx' disabled maxlength="4" tip=34>
+          </div>
+          <br><hr/> <br>
+          <!-- 背景图相关 -->
+          <div e-base='bg_img'>
+                <span class="mk_txt" style="border:0;left:8px;color: #0101BA;">使用背景图:</span>
+                <input type="checkbox" class="mk_input" style="left:75px;width:15px;" e-event='onchange:select' e-id='bg_img' disabled  lx='bg_img' tip=35>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">背景图:</span>
+                <input type="txt" class="mk_input" style="left:49px;width:41px;" e-change='bg' maxlength="5" tip=36> 
+                <span class="mk_txt" style="border:0;left:96px;">宽:</span>
+                <input type="txt" class="mk_input" style="left:116px;width:35px;" e-change='bg_w' tip=37> 
+                <span class="mk_txt" style="border:0;left:156px;">高:</span>
+                <input type="txt" class="mk_input" style="left:176px;width:35px;" e-change='bg_h' tip=38>
+                <span class="mk_txt" style="border:0;left:216px;">px:</span>
+                <input type="txt" class="mk_input" style="left:237px;width:20px;" e-change='bg_px' tip=39>
+                <span class="mk_txt" style="border:0;left:262px;">py:</span>
+                <input type="txt" class="mk_input" style="left:283px;width:20px;" e-change='bg_py' tip=40>
+                <span class="mk_txt" style="border:0;left:306px;">平铺:</span>
+                <input type="checkbox" class="mk_input" style="left:335px;width:20px;"  e-id='bg_pp_btn' e-event='onclick:bg_pp'>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">hover:</span>
+                <input type="txt" class="mk_input" style="left:49px;width:41px;" e-change='hbg' maxlength="5" tip=41 disabled> 
+                <span class="mk_txt" style="border:0;left:96px;">宽:</span>
+                <input type="txt" class="mk_input" style="left:116px;width:35px;" e-change='hbg_w' tip=37 disabled> 
+                <span class="mk_txt" style="border:0;left:156px;">高:</span>
+                <input type="txt" class="mk_input" style="left:176px;width:35px;" e-change='hbg_h' tip=38 disabled>
+                <span class="mk_txt" style="border:0;left:216px;">px:</span>
+                <input type="txt" class="mk_input" style="left:237px;width:20px;" e-change='hbg_px' tip=39 disabled>
+                <span class="mk_txt" style="border:0;left:262px;">py:</span>
+                <input type="txt" class="mk_input" style="left:283px;width:20px;" e-change='hbg_py' tip=40 disabled>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">down:</span>
+                <input type="txt" class="mk_input" style="left:49px;width:41px;" e-change='dbg' maxlength="5" tip=42 disabled> 
+                <span class="mk_txt" style="border:0;left:96px;">宽:</span>
+                <input type="txt" class="mk_input" style="left:116px;width:35px;" e-change='dbg_w' tip=37 disabled> 
+                <span class="mk_txt" style="border:0;left:156px;">高:</span>
+                <input type="txt" class="mk_input" style="left:176px;width:35px;"e-change='dbg_h' tip=38 disabled>
+                <span class="mk_txt" style="border:0;left:216px;">px:</span>
+                <input type="txt" class="mk_input" style="left:237px;width:20px;" e-change='dbg_px' tip=39 disabled>
+                <span class="mk_txt" style="border:0;left:262px;">py:</span>
+                <input type="txt" class="mk_input" style="left:283px;width:20px;"e-change='dbg_py' tip=40 disabled>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">up:</span>
+                <input type="txt" class="mk_input" style="left:49px;width:41px;" e-change='ubg' maxlength="5" tip=43 disabled> 
+                <span class="mk_txt" style="border:0;left:96px;">宽:</span>
+                <input type="txt" class="mk_input" style="left:116px;width:35px;" e-change='ubg_w' tip=37 disabled> 
+                <span class="mk_txt" style="border:0;left:156px;">高:</span>
+                <input type="txt" class="mk_input" style="left:176px;width:35px;" e-change='ubg_h' tip=38 disabled>
+                <span class="mk_txt" style="border:0;left:216px;">px:</span>
+                <input type="txt" class="mk_input" style="left:237px;width:20px;" e-change='ubg_px' tip=39 disabled>
+                <span class="mk_txt" style="border:0;left:262px;">py:</span>
+                <input type="txt" class="mk_input" style="left:283px;width:20px;" e-change='ubg_py' tip=40 disabled>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">变换:</span>
+                <input type="txt" class="mk_input" style="left:49px;width:102px;" e-change='bbg' tip=44 disabled>
+                <span class="mk_txt" style="border:0;left:156px;">频率:</span>
+                <input type="txt" class="mk_input" style="left:185px;width:34px;" e-change='bpl' maxlength='4' tip=45 disabled> 
+                <br>
+                <span class="mk_txt" style="border:0;left:96px;">宽:</span>
+                <input type="txt" class="mk_input" style="left:116px;width:35px;" e-change='bbg_w' tip=37 disabled> 
+                <span class="mk_txt" style="border:0;left:156px;">高:</span>
+                <input type="txt" class="mk_input" style="left:176px;width:35px;" e-change='bbg_h' tip=38 disabled>
+                <span class="mk_txt" style="border:0;left:216px;">px:</span>
+                <input type="txt" class="mk_input" style="left:237px;width:20px;" e-change='bbg_px' tip=39 disabled>
+                <span class="mk_txt" style="border:0;left:262px;">py:</span>
+                <input type="txt" class="mk_input" style="left:283px;width:20px;" e-change='bbg_py' tip=40 disabled>
+          </div>
+          <br><hr/><br>
+          <!-- 背景色相关 暂不启用-->
+          <div e-base='bg_color'>
+                <span class="mk_txt" style="border:0;left:8px;color: #0101BA;">使用背景色:</span>
+                <input type="checkbox" class="mk_input" style="left:75px;width:15px;" e-event='onchange:select' e-id='bg_color' lx='bg_color' tip=35 disabled> 
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">背景色:</span>
+                <input type="txt" class="mk_input" style="left:49px;width:41px;" e-change='bg' maxlength="5" tip=46 disabled> 
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">hover:</span>
+                <input type="txt" class="mk_input" style="left:49px;width:41px;" e-change='hbg' maxlength="5" tip=47 disabled> 
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">down:</span>
+                <input type="txt" class="mk_input" style="left:49px;width:41px;" e-change='dbg' maxlength="5" tip=48 disabled> 
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">up:</span>
+                <input type="txt" class="mk_input" style="left:49px;width:41px;" e-change='ubg' maxlength="5" tip=49 disabled>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">变换:</span>
+                <input type="txt" class="mk_input" style="left:49px;width:102px;" e-change='bbg' tip=50 disabled>
+                <span class="mk_txt" style="border:0;left:156px;">频率:</span>
+                <input type="txt" class="mk_input" style="left:185px;width:34px;" e-change='bpl' maxlength='4' tip=51 disabled> 
+              
+          </div>
+          <br><hr/><br>
+          <!-- 事件相关 -->
+          <div e-base='event'>
+                <span class="mk_txt" style="border:0;left:8px;color: #0101BA;">事件:</span>
+                <input type="checkbox" class="mk_input" style="left:75px;width:15px;" e-event='onchange:select' e-id='event' disabled  lx='event' tip=52>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">click:</span>
+                <input type="txt" class="mk_input" style="left:52px;width:302px;" e-change='click' disabled  tip=53>
+                <br>
+                <span class="mk_txt" style="border:0;left:294px;">快捷键:</span>
+                <input type="txt" class="mk_input" style="left:336px;width:18px;" e-change='c_key' disabled  maxlength="1" tip=58>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">down:</span>
+                <input type="txt" class="mk_input" style="left:52px;width:302px;" e-change='down' disabled  tip=54>
+                <br>
+                <span class="mk_txt" style="border:0;left:294px;">快捷键:</span>
+                <input type="txt" class="mk_input" style="left:336px;width:18px;" e-change='d_key' disabled  maxlength="1" tip=58>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">up:</span>
+                <input type="txt" class="mk_input" style="left:52px;width:302px;" e-change='up' disabled  tip=55>
+                <br>
+                <span class="mk_txt" style="border:0;left:294px;">快捷键:</span>
+                <input type="txt" class="mk_input" style="left:336px;width:18px;" e-change='u_key' disabled  maxlength="1" tip=58>
+                <br><br>
+                <span class="mk_txt" style="border:0;left:8px;">hover:</span>
+                <input type="txt" class="mk_input" style="left:52px;width:302px;" e-change='hover' disabled  tip=56>
+                <br>
+                <span class="mk_txt" style="border:0;left:8px;">move:</span>
+                <input type="txt" class="mk_input" style="left:52px;width:302px;" e-change='move' tip=57 disabled>
+          </div>
+          <br><hr/><br>
+          <div style="margin-top:100px;"></div>
+      </div>
+</div>
+
+<!-- 素材导入分类 -->
+<div id='sc_' class="big_bg" style="display:none;">
+       <div class="ui_bt_close" style=""></div>
+       <!-- 素材获取模块 -->
+       <div class='sc_hq'>
+           <!-- 路径提交 -->
+           <div style="position:relative;width:100%;height:40px;background:#7E7E81;">
+                <input class="sc_path" type="text" style="position:absolute;width:400px;height:20px;right:48px;top:10px;background:#DADBD9;" placeholder="请输入素材源文件目录" value="F:\canvas 2D测试\img-all">
+                <button class="sc_path_button" style="position:absolute;width:20px;height:20px;right:20px;top:10px;">
+                    <img src="./img/功能小图标/文件夹.png" >
+                </button>
+           </div>
+           <!-- 文件显示列表 -->
+           <div class='sc_list'>
+                <div e-for='source' class="sc_list_div">
+                    <div class="sc_img_div">
+                        <img  e-attr='src=src;index=$_index;draggable=drag' e-event='ondblclick:inOrBakFile;ondragstart:dragStart'>
+                    </div>
+                    <span>{{path}}</span>
+                </div>
+           </div>
+       </div>
+       <!-- 项目树-横向 -->
+       <div class="sc_img_fl">
+              <!-- 文件树垂直列表 -->
+               <div class="sc_fl_ts"">
+                     选取拖拽上方素材源的  图片 或 音频 到下方项目分类文件夹中
+               </div>
+               <div style="position:absolute;left:20px;width:300px;height:20px;line-height:20px; top:70px;">
+                  <input type="text" style="width:100px;height:20px;font-size:12px;" maxlength="7" e-id='flie_name'>
+                  <button style="width:58px;height:20px;margin-left:3px;" e-event='onclick:add_dl;onmouseover:ts_0'>创主目录</button>
+                  <button style="width:58px;height:20px;margin-left:3px;" e-event='onclick:add_zl;onmouseover:ts_0'>创子目录</button>
+                  <button style="width:58px;height:20px;margin-left:3px;" e-event='ondblclick:del_xz;onmouseover:ts_0'>删除选中</button>
+               </div>
+               <div class="sc_zc_list" e-id='gc_change'>
+                      <div class="sc_file" e-for='treeF'>
+                             <div e-event='onclick:sz_dl' e-attr='index=$_index'>
+                                    <div class="sc_flie_1">
+                                       <span class="sc_first">{{name}}</span>
+                                    </div>
+                                    <div class="sc_flie_1" e-attr='class=show?(null):(sc_zk_ss)'>
+                                        <div e-for='child'>
+                                             <span  e-attr='pIndex=pIndex;index=$_index' e-event='onclick:sz_zl'>{{name}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="sc_zoom" e-event='onclick:shouFang'>{{state}}</div>
+                              </div>      
+                      </div>
+               </div>
+               <!-- 提示目录路径  -->
+               <div style="position:absolute;left:350px;width:500px;height:20px;line-height:20px; top:70px;">
+                    <span style="height:20px;margin-left:3px;background:rgb(203,203,209);font-size:12px; padding-left:4px;">选中目录文件 >> </span>
+                    <input type="text" style="width:280px;height:20px;font-size:12px;margin-left:4px;padding-left:30px;" e-id='xz_path' disabled>
+                    <button style="width:58px;height:20px;margin-left:30px;" e-event='onclick:del_img_yp;onmouseover:ts_0'>删除素材</button>
+                </div>
+                 <!-- 已拖拽 目录文件 列表 -->
+                <div class="sc_xz_ml" e-id='sc_prevent' e-event='ondrop:dragDrop'>
+                        <div class="sc_list_div" style="margin-top:2px;" e-for='data'>
+                            <div class="sc_img_div">
+                                <img draggable="false"  e-attr='src=src' e-event='onclick:xz_img'>
+                            </div>
+                            <span>{{id}}</span>
+                        </div>
+                </div>
+                <!-- 属性显示区 -->
+                <div class="sc_img_atr">
+                       <span style="left:10px;top:20px; text-align:right;">宽:</span>
+                       <input type="text" style="left:52px;top:20px;" disabled>
+                       <span style="left:10px;top:60px; text-align:right;">高:</span>
+                       <input type="text" style="left:52px;top:60px;" disabled>
+                </div>
+       </div>
+       
+</div>
+
+<!-- 素材编辑 合成图 动画 -->
+<div id='scbj_' class="big_bg" style="display:none;">
+      <div class="ui_bt_close" style=""></div>
+      <div class="scbj_rq">
+               <!-- 上侧基本源目录相关 --> 
+               <div class="scbj_source">
+                        <!-- 目录树 -->
+                        <div class="sc_zc_list" style="top:37px">
+                                <div class="sc_file" e-for='ml_tree'>
+                                    <div>
+                                            <div class="sc_flie_1">
+                                                <span class="sc_first">{{name}}</span>
+                                            </div>
+                                            <div class="sc_flie_1" e-attr='class=show?(null):(sc_zk_ss)'>
+                                                <div e-for='child_y'>
+                                                    <span  e-attr='path=path' e-event='onclick:sz_y'>{{name}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="sc_zoom" e-event='onclick:zk_ss'>{{state}}</div>
+                                        </div>      
+                                </div>
+                        </div>
+                        <!-- 提示目录路径  -->
+                        <div style="position:absolute;left:350px;width:500px;height:20px;line-height:20px; top:5px;">
+                            <span style="height:20px;margin-left:3px;background:rgb(203,203,209);font-size:12px; padding-left:4px;">选中目录文件 >> </span>
+                            <input type="text" style="width:280px;height:20px;font-size:12px;margin-left:4px;padding-left:30px;" e-id='ml_path' disabled>
+                        </div>
+                        <!--   源文件列表 -->
+                        <div class="sc_xz_ml" e-id='sc_prevent' style="top:37px;width:840px;" tip=1>
+                                <div class="sc_list_div" style="margin-top:2px;" e-for='source'>
+                                    <div class="sc_img_div">
+                                        <img e-attr='src=src' draggable="true"  e-event='ondragstart:ondragstart'>
+                                    </div>
+                                    <span>{{id}}</span>
+                                </div>
+                        </div>
+                    
+               </div><!--上侧基本源目录  -->
+               <!-- 下侧动画目录相关 ~~~~~~~~~~~~~~~~下~~~~~~~~~~~~~~~~~下~~~~~~~~~~~~~~~~下~~~~~~~~~~~~下~~~~~~~~~~~~~下~~~~~~~~~~~~ -->
+               <div class="scbj_source">
+                            <div style="position:absolute;left:20px;width:300px;height:20px;line-height:20px; top:5px;">
+                                <input type="text" style="width:100px;height:20px;font-size:12px;" maxlength="7" e-id='flie_name'>
+                                <button style="width:58px;height:20px;margin-left:3px;" e-event='onclick:add_pm;onmouseover:ts_0'>创主目录</button>
+                                <button style="width:58px;height:20px;margin-left:3px;" e-event='onclick:add_zm;onmouseover:ts_0'>创子目录</button>
+                                <button style="width:58px;height:20px;margin-left:3px;" e-event='ondblclick:del_ml;onmouseover:ts_0'>删除选中</button>
+                            </div>
+                            <!-- 目录树 -->
+                        <div class="sc_zc_list"  style="top:37px">
+                                    <div class="sc_file" e-for='ml_hcdh'>
+                                        <div e-event='onclick:xz_pml' e-attr='class=F?(scbj_border):(null);index=$_index'>
+                                                <div class="sc_flie_1">
+                                                        <span class="sc_first">{{name}}</span>
+                                                </div>
+                                                <div class="sc_flie_1" e-attr='class=show?(null):(sc_zk_ss)'>
+                                                        <div e-for='child'>
+                                                            <span  e-attr='pos=pos;path=path' e-event='onclick:xz_zml'>{{name}}</span>
+                                                        </div>
+                                                </div>
+                                                <div class="sc_zoom" e-event='onclick:zk_ss'>{{state}}</div>
+                                            </div>      
+                                    </div>
+                        </div>
+                        <!-- 提示  颜色变更 -->
+                        <div style="position:absolute;left:350px;width:600px;height:20px;font-size:13px;font-weight:bolder;color:#530502;line-height:20px; top:5px;">
+                            <span style="display:inline-block;width:16px;height:16px;background:rgb(255,255,255);margin-left:4px;" e-event='onclick:xz_color' tip=2></span>
+                            <span style="display:inline-block;width:16px;height:16px;background:rgb(211,211,211);margin-left:4px;" e-event='onclick:xz_color' tip=2></span>
+                            <span style="display:inline-block;width:16px;height:16px;background:rgb(0,0,0);margin-left:4px;" e-event='onclick:xz_color' tip=2></span>
+                            <span style="display:inline-block;width:16px;height:16px;background:rgb(188,236,246);margin-left:4px;" e-event='onclick:xz_color' tip=2></span>
+                            <span style="display:inline-block;width:16px;height:16px;background:rgb(251,198,189);margin-left:4px;" e-event='onclick:xz_color' tip=2></span>
+                            <span style="display:inline-block;width:16px;height:16px;background:rgb(91,121,249);margin-left:4px;" e-event='onclick:xz_color' tip=2></span>
+                            <span style="display:inline-block;width:16px;height:16px;background:rgb(240,127,250);margin-left:4px;" e-event='onclick:xz_color' tip=2></span>
+                        </div>
+                        <!-- 动图编辑区-->
+                        <div class="sc_xz_ml" e-id='sc_prevent'  style="top:37px;overflow:hidden;">
+                               <div class="scbj_dh_rq"  e-id='dh_rq' e-event='ondrop:ondrop' tip=3>
+                                     <span e-for='imgData'>
+                                         <img  e-event='onload:imgload;onmousedown:xz_img' e-attr='src=src;index=$_index' style="display:none;" draggable="false">
+                                     </span> 
+                               </div>
+                               <div class="dh_rq_x" e-id='fzx_x'></div>
+                               <div class="dh_rq_y" e-id='fzx_y'></div>
+                        </div>
+                        <!-- 删除控制区 -->
+                         <div style="position:absolute;right:20px;width:200px;height:20px;font-size:13px;font-weight:bolder;line-height:20px;top:5px;">
+                             <button style="margin-left:0px;width:54px;height:20px;" e-event='ondblclick:del_img' tip=18>删除图</button>
+                             <button style="margin-left:17px;width:54px;height:20px;" e-event='ondblclick:del_fps' tip=19>删除帧</button>
+                             <button style="margin-left:10px;width:54px;height:20px;" e-event='ondblclick:add_fps' tip=20>创建帧</button>
+                         </div>
+                         <!-- 属性和帧列表显示区 -->
+                        <div class="sc_img_atr" style="top:37px;" e-base='dhData'>
+                                <!-- 基点 -->
+                                <span style="left:0px;text-align:right;width:50px;height:20px;line-height:20px;top:4px">基点 ></span>
+                                <span style="left:111px;text-align:right;height:20px;line-height:20px;top:4px">y:</span>
+                                <span style="left:50px;text-align:right;height:20px;line-height:20px;top:4px">x:</span>
+                                <input type="text" style="left:100px;width:26px;height:20px;line-height:20px;top:4px" maxlength="3" e-change='jx'>
+                                <input type="text" style="left:160px;width:26px;height:20px;line-height:20px;top:4px" maxlength="3" e-change='jy'>
+                                <span style="left:34px;text-align:right;height:20px;line-height:20px;width:60px;top:34px">切换:</span>
+                                <span style="left:98px;text-align:right;height:20px;line-height:20px;width:60px;top:34px">过渡:</span>
+                                <input type="checkbox" style="left:100px;width:26px;height:20px;line-height:20px;top:34px" e-id='qh_dh_dom' e-event='onclick:dh_qh' tip=4>
+                                <input type="checkbox" style="left:160px;width:26px;height:20px;line-height:20px;top:34px" e-id='gd_dh_dom' e-event='onclick:dh_qh' tip=5>
+                                <br><br>
+                                <!-- 选中 -->
+                                <br><hr><br>
+                                <div e-base='xzData'>
+                                        <span style="left:0px;text-align:right;width:50px;height:20px;line-height:20px;">选中 ></span>
+                                        <span style="left:50px;text-align:right;height:20px;line-height:20px;">X:</span>
+                                        <span style="left:111px;text-align:right;height:20px;line-height:20px;">Y:</span>
+                                        <input type="text" style="left:100px;width:26px;height:20px;line-height:20px;" maxlength="3" e-change='x' tip=6>
+                                        <input type="text" style="left:160px;width:26px;height:20px;line-height:20px;" maxlength="3" e-change='y' tip=7>
+                                        <br>
+                                        <span style="left:50px; text-align:right;height:20px;line-height:20px;">宽:</span>
+                                        <span style="left:111px;text-align:right;height:20px;line-height:20px;">高:</span>
+                                        <input type="text" style="left:100px;width:26px;height:20px;line-height:20px;" maxlength="3" e-change='w' tip=8>
+                                        <input type="text" style="left:160px;width:26px;height:20px;line-height:20px;" maxlength="3" e-change='h' tip=9>
+                                        <br>
+                                        <span style="left:6px;text-align:right;height:20px;line-height:20px;">显示:</span>
+                                        <span style="left:62px;text-align:right;height:20px;line-height:20px;">镜像:</span>
+                                        <span style="left:123px;text-align:right;height:20px;line-height:20px;">阴影:</span>
+                                        <input type="checkbox" style="left:52px;width:16px" e-id='xs_dom' e-event='onclick:xs_check' tip=10>
+                                        <input type="checkbox" style="left:110px;width:16px" e-id='jx_dom' e-event='onclick:jx_check' tip=11>
+                                        <input type="checkbox" style="left:170px;width:16px" e-id='yy_dom' e-event='onclick:yy_check' tip=12>
+                                        <br>
+                                        <span style="left:26px; text-align:right;height:20px;line-height:20px;">位移:</span>
+                                        <span style="left:78px; text-align:right;height:20px;line-height:20px;">上:</span>
+                                        <span style="left:123px;text-align:right;height:20px;line-height:20px;">下:</span>
+                                        <input type="text" style="left:70px;width:26px;height:20px;line-height:20px;" e-change='wy'>
+                                        <button style="position:absolute;width:20px;height:20px;line-height:20px;left:122px;" e-event='onclick:img_up' tip=13>▲</button>
+                                        <button style="position:absolute;left:166px;width:20px;height:20px;line-height:20px;" e-event='onclick:img_down' tip=14>▼</button>
+                                </div>
+                                <br><br><hr>
+                                <!-- 帧选择区 -->
+                                <span style="left:5px;text-align:right;width:fit-content;height:20px;line-height:20px;">循环 : </span>
+                                <input type="checkbox" style="left:40px;width:16px;" checked e-id='xh_dom' e-event='onchange:xh_lx' tip=15>
+                                <button style="position:absolute; height:20px;line-height:20px;right:10px;font-size:12px;" e-event='onclick:gx_init' tip=16>编辑过渡关系</button>
+                                <br>
+                                <span style="left:5px;text-align:right;width:fit-content;height:20px;line-height:20px;">帧序 : </span>
+                                <input type="text" style="left:40px;width:130px;height:20px;line-height:20px;" e-change='list' tip='17'>
+                                <button style="position:absolute;width:20px;height:20px;line-height:20px;right:6px;" e-event='onclick:bfOrZt' e-id='bfZt_dom' tip=21>播</button>
+                                <!-- 帧列表 -->
+                                <div class='fps_list'>
+                                       <div class='fps_fps' e-for='fpsTime'>
+                                                <div e-event='onclick:xz_fps' style="width:100%;height:100%;" e-attr='index=$_index'>
+                                                    <span>帧 : </span><input type="text" disabled e-attr='value=$_index' style="text-align:center;" tip=22>
+                                                    <span>时间 : </span><input type="text"   e-event='onchange:gx_time' e-attr='value=time' tip=23>
+                                                </div>
+                                       </div>
+                                </div>
+                        </div>
+               </div><!-- 下侧动画目录相关 END -->
+               <!-- 帧连线关系图  浮动在最上层-->
+              <div class='scbj_gx' e-base='gx_line' style="display:none;">
+                        <!-- 连线图面板关闭按钮 -->
+                        <div class="ui_bt_close" style="border-radius:6px;"></div>
+                        <!-- 序列帧指示 -->
+                        <div class="scbj_gx_sx" e-id='gx_zx' tip=24>
+                            <eng e-for='index'>
+                                <span e-attr='index=$_index'>{{index}}</span>
+                            </eng>
+                        </div>     
+                        <!-- 两个帧 index指示列表 --> 
+                        <div class="scbj_gx_index" style="top:250px" e-id='indexPrv' tip=25>0</div>
+                        <div class="scbj_gx_index" style="top:765px" e-id='indexNxt' tip=26>1</div>
+                        <!--  -->
+                        <div style="width:5px;height:5px;left:168px;top:560px;background:rgb(4,64,242);"></div>
+                        <!-- 两个动画窗 -->
+                        <div class="sc_xz_ml" style="top:86px;overflow:hidden;left:300px;">
+                                <div class="scbj_dh_rq" e-id='st_rq_t' tip=27>
+                                    <span e-for='fpsPrv'>
+                                        <img  e-event='onload:gx_imgload;onclick:gx_line;oncontextmenu:gx_line' e-attr='src=src;index=$_index' style="display:none;" draggable="false" p=1>
+                                    </span> 
+                                </div>
+                        </div>
+                        <div class="sc_xz_ml" style="top:567px;overflow:hidden;left:300px;">
+                                <div class="scbj_dh_rq" e-id='st_rq_b' tip=28>
+                                    <span e-for='fpsNxt'>
+                                        <img  e-event='onload:gx_imgload;onclick:gx_line' e-attr='src=src;index=$_index' style="display:none;" draggable="false" p=2>
+                                    </span> 
+                                </div>
+                        </div>
+                        <!-- 两个侧边 img选择栏 对应上下视图 -->
+                        <div class="scbj_gx_img_xz" style="top:86px;" e-id='st_bar_t'>
+                            <span e-for='imgBar_t'>
+                                <img e-attr='src=src;index=$_index' e-event='onclick:gx_line;oncontextmenu:gx_line' draggable="false" p=1>
+                            </span>
+                        </div>
+                        <div class="scbj_gx_img_xz" style="top:567px;"  e-id='st_bar_b'>
+                            <span e-for='imgBar_b'>
+                                <img e-attr='src=src;index=$_index' e-event='onclick:gx_line;oncontextmenu:gx_line' draggable="false" p=2>
+                            </span>
+                        </div>
+                        <!-- 两个翻页按钮 -->
+                        <button class="scbj_gx_btn" style="top:250px" e-event='onclick:pagePrv' tip=29>▲</button>
+                        <button class="scbj_gx_btn" style="top:765px" e-event='onclick:pageNxt' tip=30>▼</button>
+                        <!-- svg 关系连线图 -->
+                        <svg e-id='gx_svg'>
+                        </svg>
+               </div><!-- 帧连线关系图  END-->
+      </div><!-- <div class="scbj_rq">  END   ~~~~~ --> 
+</div>
+
+<!-- 资源选择器_地图  -->
+<div id='map_sc_xzq' style="display:none;">
+        <div class="ui_bt">
+            <div class="ui_bt_move" drag=1 dragDom=2></div>
+            <div class="ui_bt_bt">地图资源选择器</div>
+            <div class="ui_bt_zoom"></div>
+            <div class="ui_bt_close" e-event='onclick:ui_close'></div>
+        </div>
+        <!-- 模块切换 -->
+        <div class="map_sc_mk" style="height:52px;">
+            <button>图片/音频</button>
+            <button>帧动画</button>
+            <button>天气云层</button>
+            <!-- <button>NPC</button> -->
+            <!-- <button>触发器</button> -->
+        </div>
+        <!-- 目录列表  主要为 图片,音频,组合动画 , npc , 天气 , 以及特效 -->
+        <div class="map_sc_tree" style="display:none;">
+                <div class="sc_zc_list"  style="top:0px;width:594px;left:2px;height:300px;">
+                    <div class="sc_file" e-for='mlTree'>
+                        <div>
+                                <div class="sc_flie_1">
+                                        <span class="sc_first">{{name}}</span>
+                                </div>
+                                <div class="sc_flie_1" e-attr='class=show?(null):(sc_zk_ss)'>
+                                        <div e-for='child'>
+                                            <span  e-attr='path=path' e-event='onclick:xz_zml'>{{name}}</span>
+                                        </div>
+                                </div>
+                                <div class="sc_zoom" e-event='onclick:zk_ss' style="right:78px;">{{state}}</div>
+                        </div>      
+                    </div>
+                </div>
+        </div> 
+        <!-- 图片 音频~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- 图片/音频资源列表 -->
+        <div class="map_sc_img_zy" style="margin-top:6px;display:none;">
+                <div class="sc_xz_ml" e-id='sc_prevent' style="width:590px;height:300px;top:0px;left:4px;">
+                        <div class="sc_list_div" style="margin-top:2px;" e-for='zy_tp_yp'>
+                            <div class="sc_img_div">
+                                <img e-event='onmousedown:xz_zy_0' e-attr='src=src' draggable="false">
+                            </div>
+                            <span>{{id}}</span>
+                        </div>
+                </div>
+        </div>                     
+        <!-- 0-图片类型 参数面板-->
+        <div class="map_sx_mk" style="margin-top:6px; display:none;" e-base='sx_mk_0'>
+                <div>
+                    <span>ID:</span>
+                    <input type="text" e-change='id' disabled>
+                </div>
+                <div>
+                    <span>宽:</span>
+                    <input type="text" e-change='w'>
+                </div>
+                <div>
+                    <span>高:</span>
+                    <input type="text" e-change='h'>
+                </div>
+                <div style="margin-left:20px;margin-top:0px;">
+                    <span>镜像:</span>
+                    <input type="checkbox"  style="width:14px;top:5px;" e-event='onclick:jx_check' e-id='img_jx'>
+                </div>
+                <div style="width:100%;height:1px;"></div>
+                <div>
+                    <span>类型 >>>> </span>
+                    <span>地面:</span>
+                    <input type="checkbox" style="width:14px;top:5px;" checked lx='0,0' e-event='onclick:xz_lx_img'>
+                </div>
+                <div style="margin-left:8px;">
+                    <span>实体:</span>
+                    <input type="checkbox" style="width:14px;top:5px;" lx='0,1' e-event='onclick:xz_lx_img'>
+                </div>
+                <div style="margin-left:8px;">
+                    <span>附属装饰:</span>
+                    <input type="checkbox" style="width:14px;top:5px;" lx='0,2' e-event='onclick:xz_lx_img' disabled>
+                </div>
+                <div style="width:100%;height:1px;"></div>
+                <div>
+                    <span>位置 >>>> </span>
+                    <span>左下对齐</span>
+                    <input type="checkbox" style="width:14px;top:5px;" lx='1,0' e-event='onclick:xz_lx_img' checked disabled>
+                    <span>右下对齐</span>
+                    <input type="checkbox" style="width:14px;top:5px;" lx='1,1' e-event='onclick:xz_lx_img' disabled>
+                    <span>左上对齐</span>
+                    <input type="checkbox" style="width:14px;top:5px;" lx='1,2' e-event='onclick:xz_lx_img' disabled>
+                    <span>右上对齐</span>
+                    <input type="checkbox" style="width:14px;top:5px;" lx='1,3' e-event='onclick:xz_lx_img' disabled>
+                </div>
+                <div style="width:100%;height:1px;"></div>
+                <div>
+                    <span>添加方式 >> </span>
+                    <span>唯一:</span>
+                    <input type="checkbox" style="width:14px;top:5px;" checked lx='2,0' e-event='onclick:xz_lx_img'>
+                    <span>重复:</span>
+                    <input type="checkbox" style="width:14px;top:5px;" lx='2,1' e-event='onclick:xz_lx_img'>
+                    <span>随机:</span>
+                    <input type="checkbox" style="width:14px;top:5px;" lx='2,2' e-event='onclick:xz_lx_img' disabled>
+                    <span>随机重复:</span>
+                    <input type="checkbox" style="width:14px;top:5px;" lx='2,3' e-event='onclick:xz_lx_img' disabled>
+                </div>
+                <div style="width:100%;height:1px;"></div>
+                
+        </div>
+        <!-- 1-音频类型 参数面板 -->
+        <div class="map_sx_mk" style="margin-top:6px;display:none;" e-base='sx_mk_1'>
+                <div>
+                    <span>ID:</span>
+                    <input type="text" e-change='id' disabled>
+                    <span>背景音效:</span>
+                    <input type="checkbox" style="width:14px;top:5px;" lx=0 e-event='onclick:xz_lx_audio'>
+                    <span>地图音源:</span>
+                    <input type="checkbox" style="width:14px;top:5px;" checked lx=1 e-event='onclick:xz_lx_audio'>
+                </div>
+                <div style="width:100%;height:1px;"></div>
+        </div>
+        <!-- 2-帧动画资源显示区  -->
+        <div class="map_sx_mk" style="margin-top:6px;width:100%;height:470px;display:none;" >
+            <div class="scbj_dh_rq" style="width:100%;height:100%;" e-event='onwheel:dh_wheel'>
+                <span e-for='dhData'>
+                     <img  e-event='onload:imgload;' e-attr='src=src' style="display:none;" draggable="false">
+                </span> 
+           </div>
+        </div>
+        <!-- 帧动画 参数面板  -->
+        <div class="map_sx_mk" style="margin-top:6px;width:100%;display:none;" e-base='sx_mk_2'>
+                <div>
+                    <span>ID:</span>
+                    <input type="text" e-change='id' disabled>
+                    <span>总帧数</span>
+                    <input type="text" e-change='fn' disabled>
+                    <span>播放帧序</span>
+                    <input type="text" e-change='fx' disabled style="width:100px;">
+                    <span>动画类型</span>
+                    <input type="text" e-change='lx' disabled style="width:40px;">
+                    <!-- <span style="margin-left:10px;width:20px;"></span>
+                    <span style="margin-left:6px;width:20px;"></span>
+                    <span style="margin-left:6px;width:20px;"></span> -->
+                </div>
+                <div style="width:100%;height:1px;"></div>
+                <div>
+                    <span>地表:</span>
+                    <input type="checkbox" class="dom_lx" style="width:14px;top:5px;" lx=0 checked e-event='onclick:xz_dh_lx'>
+                </div>
+                <div style="margin-left:12px;">
+                    <span>实体:</span>
+                    <input type="checkbox" class="dom_lx" style="width:14px;top:5px;" lx=1 e-event='onclick:xz_dh_lx'>
+                </div>
+                <div style="margin-left:12px;">
+                    <span>附属装饰:</span>
+                    <input type="checkbox" class="dom_lx" style="width:14px;top:5px;" lx=2 e-event='onclick:xz_dh_lx' disabled>
+                </div>
+        </div>
+</div>
+
+<!-- (暂废) 蓝图大纲  包括 UI 关系 , 事件器 , 各种逻辑编辑器  -->
+<div id='blueprint' class="big_bg" style="display:none;">
+    <!-- 事件类型列表 开关按钮 -->
+    <div class='lu_bar'>
+         <button n=0>地图事件</button>
+         <button n=1>UI事件</button>
+         <button n=2>NPC事件</button>
+         <button n=3>任务事件</button>
+         <button n=4>物品事件</button>
+        <div class="ui_bt_close"></div>
+    </div>
+    <!-- 事件列表 -->
+    <div class="lu_list_area">
+        <!-- f=>0:none,1:block -->
+         <div class="lu_list_bar" style="display:;" f=1 n=0>
+                <span style="background:rgb(227,231,198);">地图 :</span>
+                <button e='0'>地图</button><button e='1'>地图触发器</button><button e='2'>地图数据修改</button>
+                <button e='3'>天气/时间修改</button><button e='4'>音效修改</button><button e='5'>地图切换</button>
+         </div>
+         <div class="lu_list_bar" style="display:none;" f=0 n=1>
+                <span style="background:rgb(238,165,238);">UI :</span>
+                <button>按键</button><button>开关</button><button>调整</button>
+        </div>
+        <div class="lu_list_bar" style="display:none;" f=0 n=2>
+                <span style="background:rgb(177,169,249);">NPC :</span>
+                <button>NPC</button><button>NPC属性</button><button>攻击行为</button><button>行为脚本</button><button>行为变更</button><button>传送</button>
+        </div>
+        <div class="lu_list_bar" style="display:none;" f=0 n=3>
+                <span style="background:rgb(247,177,158);">任务 :</span>
+                <button>记录</button><button>条件</button><button>依赖</button>
+        </div>
+        <div class="lu_list_bar" style="display:none;" f=0 n=4>
+                <span style="background:rgb(158,247,174);">物品 :</span>
+                <button>物品</button><button>物品触发器</button><button>物品属性</button><button>属性生成</button>
+        </div>
+        <div class="lu_list_bar">
+                <span style="background:rgb(140,237,251);">基本 :</span>
+                <button>集线器</button><button>数据结算</button>
+        </div>
+    </div>
+    <!-- 蓝图 列表 save储存器  以及 面板添加   -->
+    <div class="lu_crud_lx">
+          <div style="width:100%;height:4px;clear:both;"></div><!--分割线 -->
+          <span>列表></span>
+          <select style="width:360px;" e-id='list_dom'>
+               <option e-for='list' e-attr='index=$_index'>{{c}}</option>
+          </select>
+          <span>描述></span><input type="text" style="width:250px;" placeholder="一句话描述,20个字符内" maxlength="20" e-change='ms'>
+          <button style="margin-left:20px;" e-event='onclick:add'>新建</button>
+          <button style="margin-left:14px;" e-event='onclick:save'>保存</button>
+          <button style="margin-left:20px;color:red;" e-event='onclick:del'>删除</button>
+          <div style="width:100%;height:8px;clear:both;"></div>
+          <div>
+                <span>UI组件></span> 
+                <select style="width:200px;" e-event='onchange:select'>
+                    <option>id:0 ; 关于map的部分 作用于 </option>
+                </select>
+          </div>
+         <div>
+                <button>刷新</button><button>添加</button>
+         </div>
+    </div>
+    <!-- 蓝图区 -->
+    <div class="lu_out">
+          <div lx='m' class="lu_content">
+              
+
+                <!-- 浮动在最上层的 连线指示图 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <svg class="lu_svg">
+                       <line x1="100" y1="-100" x2="300" y2="300" style="stroke:rgb(255,0,0);stroke-width:2"/>
+                </svg>
+          </div>
+          
+    </div>
+    <div class="lu_dom_area">
+            <!--  模板   <div class="lu_mk_clear"></div> //无高度清浮动
+                    <span class="lu_lxq_jb"></span>   //连线器左    
+                    <span class="lu_lxq_jb" style="float:right;margin-right:4px;"></span>  // 连线器右
+                    //<div class="lu_mk_area"></div> 选项区域  
+                    <div class="lu_mk_atr"></div>属性区域
+                    <div class="lu_mk_scroll"></div>//滚动区 限高400
+                    //左右连接器
+                    <span class="lu_lxq_jb" ></span> 
+                    <span class="lu_lxq_jb" style="float:right; margin-right:4px;"></span> 
+                    <div lx='z' class=" lu_mk">
+                            <div class="lu_mk_bt lu_c_wp">
+                                {{??????}} <div class="lu_mk_close">X</div>
+                            </div>
+                            <div class="lu_mk_fgx"></div>  
+                            <div class="lu_mk_atr">
+                                    <div class="lu_mk_line">
+                                    </div>
+                            </div>
+                    </div>    
+                -->
+                <!-- 物品基本 ################################################################################################-->
+                <div lx='z' class="lu_wp lu_mk">
+                    <div class="lu_mk_bt lu_c_wp">
+                        物品<div class="lu_mk_close">X</div>
+                    </div>
+                    <div class="lu_mk_fgx"></div>  
+                     <div class="lu_mk_area">
+                         <span>限定类型:</span><input type="text" style="width:80px;">
+                     </div>
+                     <div class="lu_mk_area">
+                        <span>限 定 ID :</span><input type="text" style="width:80px;">
+                     </div>
+                     <div class="lu_mk_area">
+                        <span class="lu_lxq_jb"></span> 
+                        <span class="lu_lxq_jb" style="float:right;margin-right:4px;"></span>
+                    </div>
+                </div>
+
+                <!-- 物品触发器 -->
+                <div lx='z' class="lu_wp_cfq lu_mk">
+                    <div class="lu_mk_bt lu_c_wp">
+                        物品触发器<div class="lu_mk_close">X</div>
+                    </div>
+                    <div class="lu_mk_fgx"></div>
+                    <div class="lu_mk_atr">
+                        <div class="lu_mk_area">
+                            <span>装备:</span><input type="checkbox">
+                            <span>卸装:</span><input type="checkbox">
+                            <span>使用:</span><input type="checkbox">
+                            <span>出售:</span><input type="checkbox">
+                            <span>丢弃:</span><input type="checkbox">
+                            <span>拆解:</span><input type="checkbox">
+                        </div>
+                        <div class="lu_mk_area">
+                              <span>新装备:</span><input type="checkbox">
+                              <span>新物品:</span><input type="checkbox">
+                        </div>
+                    </div>
+                    <div class="lu_mk_area">
+                        <span class="lu_lxq_jb"></span> 
+                        <span class="lu_lxq_jb" style="float:right;margin-right:4px;"></span>
+                    </div>
+                </div>    
+
+                <!-- 物品属性模块 -->
+                <div lx='z'class="lu_wp_sx lu_mk">
+                      <div class="lu_mk_bt lu_c_wp">
+                           {{物品属性}} <div class="lu_mk_close">X</div>
+                      </div>
+                      <div>
+                          <input type="text" style="width:50px;" placeholder="属性名"><button>添加属性</button>
+                      </div>
+                      <div class="lu_mk_atr">
+                          <span class="lu_lxq_lj"></span>
+                          <span class="lu_lxq_lj" style="float:right;margin-right:4px;"></span>
+                      </div>
+                      <!-- 分割线 -->
+                      <div class="lu_mk_fgx"></div>
+                      <div class="lu_mk_atr">
+                           <div class="lu_mk_line">
+                               <span style="width:64px;" class="lu_mk_text">{{哈哈大叔大大说的}}></span>
+                               <span>数字:</span><input type="checkbox" checked>
+                               <span>字符:</span><input type="checkbox">
+                               <span class="lu_lxq_jb" style="float:right;margin-right:4px;"></span>  
+                           </div>
+                           <div class="lu_mk_line">
+                               <span style="width:64px;" class="lu_mk_text">{{属性名}}></span><span>数字:</span><input type="checkbox" checked><span>字符:</span><input type="checkbox"><span class="lu_lxq_jb" style="float:right;margin-top:10px;margin-right:4px;"></span>  
+                           </div>
+                      </div>
+                </div> 
+                
+                <!-- 物品属性生成模块  -->
+                <div lx='z' class="lu_wp_sxsc lu_mk">
+                        <div class="lu_mk_bt lu_c_wp">
+                            {{属性生成}} <div class="lu_mk_close">X</div>
+                        </div>
+                        <!-- 分割线 -->
+                      <div class="lu_mk_fgx"></div>
+                      <div class="lu_mk_atr">
+                        <div class="lu_mk_line">
+                                <span style="margin-left:38px;">{{属性名}}</span>
+                                <div class="lu_mk_clear"></div>
+                                <span class="lu_lxq_jb" style="margin-left:4px;"></span>
+                                <span style="margin-left:20px;">基本值:</span><input type="checkbox" checked>
+                                <span>浮动值:</span><input type="checkbox">
+                        </div>
+                        <div class="lu_mk_line">
+                                <span style="margin-left:38px;">{{属性名}}</span>
+                                <div class="lu_mk_clear"></div>
+                                <span class="lu_lxq_jb" style="margin-left:4px;"></span>
+                                <span style="margin-left:20px;">基本值:</span><input type="checkbox" checked>
+                                <span>浮动值:</span><input type="checkbox">
+                        </div>
+                   </div>
+                </div>
+                
+                <!-- 地图 主体 ################################################################################################-->
+                <div lx='z' class="lu_map lu_mk">
+                        <div class="lu_mk_bt lu_c_dt">
+                            地图 <div class="lu_mk_close">X</div>
+                        </div>
+                        <div class="lu_mk_fgx"></div>
+                        <div>
+                            <span>全部</span><input type='checkbox' e-event='onclick:all' e-id='d_all'>
+                        </div>
+                        <div class="lu_mk_fgx"></div>
+                        <div class="lu_mk_area">
+                            <select style="width:128px;" e-id='dom'>
+                                <option e-for='list'>{{c}}</option>
+                            </select>
+                            <button e-event='onclick:add'>添加</button><button e-event='onclick:del'>删除</button>
+                            <button e-event='onclick:ref' style="float:right;margin-right:4px;">刷新</button>
+                        </div>
+                        <div class="lu_mk_area">
+                              <input type="text" style="width:192px" disabled e-change='idstr'>
+                        </div>
+                        <div class="lu_mk_area">
+                                <span class="lu_lxq_jb" e-event='onclick:e_svg' t=l></span>
+                                <span class="lu_lxq_jb" e-event='onclick:e_svg' t=r style="float:right; margin-right:4px;" ></span> 
+                        </div>
+               </div>
+
+                <!-- 地图 触发器 -->
+               <div lx='z' class="lu_map_cfq lu_mk">
+                    <div class="lu_mk_bt lu_c_dt">
+                        地图触发器 <div class="lu_mk_close">X</div>
+                    </div>
+                    <div class="lu_mk_fgx"></div>
+                    <div class="lu_mk_area">
+                        <span>触发条件 ></span>
+                        <div class="lu_mk_clear"></div>
+                        <span>地图id:</span><input type="checkbox" e-event='onclick:e_map' e-id='c_map'>
+                        <span>坐标范围:</span><input type="checkbox" e-event='onclick:e_zb' e-id='c_zb'>
+                        <span>时间:</span><input type="checkbox" e-event='onclick:e_sj' e-id='c_sj'>
+                        <span style="margin-left:8px;">天气:</span><input type="checkbox" e-event='onclick:e_tq' e-id='c_tq'>
+                    </div>
+                    <div class="lu_mk_area">
+                        <span>地图></span>
+                        <input type="text" style="width:152px;" e-id='d_map' e-change='map' disabled placeholder="id0,id1,.." title="输入地图id 以 , 号分隔">
+                    </div>  
+                    <div class="lu_mk_area">
+                        <span>坐标></span>
+                        <input type="text" style="width:152px;" e-id='d_zb' e-change='zb' disabled placeholder="x1,x2,y1,y2 ; ...." title="x1,x2,y1,y2等 x1-x2轴范围,y1-y2范围 ,每组坐标范围以 ; 号分隔">
+                    </div>
+                    <div class="lu_mk_area">
+                        <span>时间></span>
+                        <input type="text" style="width:152px;" e-id='d_sj' e-change='sj' disabled placeholder="0,8 ; 0,23 ; ...." title="0,8是 0点到8点, 每组时间值以 ; 号分隔">
+                    </div>
+                    <div class="lu_mk_area">
+                        <span>天气></span>
+                        <input type="text" style="width:152px;" e-id='d_tq' e-change='tq' disabled placeholder="晴,阴,雨,雪" title="0:晴,1:阴,2:雨,3:雪, 思种天气类型 ,以 , 号分隔">
+                    </div>
+                    <div class="lu_mk_area">
+                            <span class="lu_lxq_jb" ></span> 
+                            <span class="lu_lxq_jb" style="float:right; margin-right:4px;"></span>
+                    </div>
+               </div> 
+
+               <!-- 地图 数据修改 -->
+               <div lx='z' class="lu_map_dtXg lu_mk">
+                        <div class="lu_mk_bt lu_c_dt">
+                            地图数据修改 <div class="lu_mk_close">X</div>
+                        </div>
+                        <div class="lu_mk_fgx"></div> 
+                        <div class="lu_mk_area">
+                            <span>图片:</span><input type="checkbox"><span>切换动画:</span><input type="checkbox"><span>过渡动画:</span><input type="checkbox">
+                            <button style="float:right;margin-right:8px;">添加</button><span class="lu_lxq_jb"></span> 
+                        </div>
+                        <div class="lu_mk_scroll">
+                                <div class="lu_mk_atr">
+                                    <!-- 图片 -->
+                                    <div class="lu_mk_line">
+                                        <span>普通></span>
+                                        <div class="lu_mk_fgx"></div> 
+                                        <span>坐标:</span><input type="text" style="width:160px;">
+                                        <span>修改:</span><input type="checkbox"><span>添加:</span><input type="checkbox"><span>删除:</span><input type="checkbox"><span>替换:</span><input type="checkbox">
+                                        
+                                        <!-- 修改 -->
+                                        <div class="lu_mk_area">
+                                            <span>修改:</span><input type="text" style="width:34px;" placeholder="图id">
+                                            <span>层:</span><input type="text" style="width:20px;" title="0-空, 0最底层 空默认最后一层">
+                                            <div class="lu_mk_area">
+                                                <span>X:</span><input type="text" style="width:28px;">
+                                                <span>Y:</span><input type="text" style="width:28px;">
+                                                <span>宽:</span><input type="text" style="width:28px;">
+                                                <span>高:</span><input type="text" style="width:28px;">
+                                            </div>
+                                        </div>
+                                        <!-- 添加 -->
+                                        <div class="lu_mk_area">
+                                            <span>添加:</span><input type="text" style="width:34px;" placeholder="图id">
+                                            <span>层:</span><input type="text" style="width:20px;" title="0-空, 0最底层 空默认最后一层">
+                                            <div class="lu_mk_area">
+                                                <span>X:</span><input type="text" style="width:28px;">
+                                                <span>Y:</span><input type="text" style="width:28px;">
+                                                <span>宽:</span><input type="text" style="width:28px;">
+                                                <span>高:</span><input type="text" style="width:28px;">
+                                            </div>
+                                        </div>
+                                        <!-- 删除 -->
+                                        <div class="lu_mk_area">
+                                            <span>删除:</span><input type="text" style="width:120px;" placeholder="图id" title="图id , 允许多个目标, 以 ,分隔"">
+                                        </div>
+                                        <!-- 替换 -->
+                                        <div class="lu_mk_area">
+                                            <span>替换></span>
+                                            <span>当前:</span><input type="text" style="width:34px;" placeholder="图id">
+                                            <span>新的:</span><input type="text" style="width:34px;" placeholder="图id">
+                                        </div>
+                                    </div>
+                                    <!-- 切换动画 -->
+                                    <div class="lu_mk_line">
+                                            <span>切换/过渡动画></span>
+                                            <div class="lu_mk_fgx"></div> 
+                                            <span>坐标:</span><input type="text" style="width:160px;">
+                                            <span>修改:</span><input type="checkbox"><span>添加:</span><input type="checkbox"><span>删除:</span><input type="checkbox"><span>替换:</span><input type="checkbox">
+                                        
+                                            <!-- 修改 -->
+                                            <div class="lu_mk_area">
+                                                <span>修改:</span><input type="text" style="width:48px;" placeholder="动画ID">
+                                                <div class="lu_mk_area">
+                                                    <span>层:</span><input type="text" style="width:20px;" title="0-空, 0最底层 空默认最后一层">
+                                                    <span>X:</span><input type="text" style="width:28px;">
+                                                    <span>Y:</span><input type="text" style="width:28px;">
+                                                    <div class="lu_mk_area">
+                                                        <span>{{帧序/时,帧时}}</span></span><input type="text" style="width:100px;" title="切换动画修改 帧序/时,  过渡动画只能修改时间">
+                                                    </div>
+                                            </div>
+                                            <!-- 添加 -->
+                                            <div class="lu_mk_area">
+                                                <span>添加:</span><input type="text" style="width:48px;" placeholder="动画ID">
+                                                <div class="lu_mk_area">
+                                                    <span>层:</span><input type="text" style="width:20px;" title="0-空, 0最底层 空默认最后一层">
+                                                    <span>X:</span><input type="text" style="width:28px;">
+                                                    <span>Y:</span><input type="text" style="width:28px;">
+                                                    <div class="lu_mk_area">
+                                                        <span>{{帧序/时,帧时}}</span></span><input type="text" style="width:100px;" title="切换动画修改 帧序/时,  过渡动画只能修改时间">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- 删除 -->
+                                            <div class="lu_mk_area">
+                                                <span>删除:</span><input type="text" style="width:120px;" placeholder="动画id" title="动画id , 允许多个目标, 以 ,分隔"">
+                                            </div>
+                                            <!-- 替换 -->
+                                            <div class="lu_mk_area">
+                                                <span>替换></span>
+                                                <span>当前:</span><input type="text" style="width:40px;" placeholder="动画id">
+                                                <span>新的:</span><input type="text" style="width:40px;" placeholder="动画id">
+                                            </div>
+                                    </div>
+                                </div> <!-- <div class="lu_mk_atr"> END -->
+                         </div> 
+                    </div>
+               </div> 
+
+               <!--  地图天气/时间修改 -->
+               <div lx='z' class="lu_map_tqXg lu_mk">
+                        <div class="lu_mk_bt lu_c_dt">
+                            天气/时间修改<div class="lu_mk_close">X</div>
+                        </div>
+                        <div class="lu_mk_fgx"></div>  
+                        <div class="lu_mk_area">
+                            <span>天气:</span><input type="checkbox"><span>光照:</span><input type="checkbox"><span>时间:</span><input type="checkbox">
+                        </div>
+                        <div class="lu_mk_atr">
+                                <div class="lu_mk_line">
+                                    <span class="lu_lxq_jb"></span><span>天气></span><input type="text" style="width:40px;">
+                                </div>
+                                <div class="lu_mk_line">
+                                    <span class="lu_lxq_jb"></span><span>光照></span><input type="text" style="width:40px;">
+                                </div>
+                                <div class="lu_mk_line">
+                                    <span class="lu_lxq_jb"></span><span>时间></span><input type="text" style="width:40px;">
+                            </div>
+                        </div>
+                        
+               </div>
+
+               <!-- 地图音效修改 -->
+               <div lx='z' class="lu_map_yxXg lu_mk">
+                    <div class="lu_mk_bt lu_c_dt">
+                        音效修改<div class="lu_mk_close">X</div>
+                    </div>
+                    <div class="lu_mk_fgx"></div>
+                    <div class="lu_mk_area">
+                        <span>触发</span><input type="checkbox">
+                        <span>背景</span><input type="checkbox">
+                        <span>区域</span><input type="checkbox">
+                        <span>行走</span><input type="checkbox">
+                        <div class="lu_mk_clear"></div>
+                        <button style="float:right;margin-right:8px;">添加</button>
+                    </div>
+                    <div class="lu_mk_scroll">
+                        <div class="lu_mk_atr">
+                                <div class="lu_mk_line">
+                                    
+                                </div>
+                        </div>
+                    </div>
+               </div> 
+    </div>
+</div>
+
+<!-- 地图事件编辑器 暂未编辑完 补充js-->
+<div id='em_' style="display:none;">
+    <div class="ui_bt">
+        <div class="ui_bt_move" drag=1 dragDom=2></div>
+        <div class="ui_bt_bt">地图事件编辑器</div>
+        <div class="ui_bt_zoom"></div>
+        <div class="ui_bt_close" e-event='onclick:ui_close'></div>
+   </div>
+   <!-- 类别! 事件 or 地图显示 -->
+   <div class="em_class">
+       <button>事件</button><button>明细</button>
+   </div>
+   <!-- 事件添加区域 -->
+   <div class="em_tj">
+        <span>添加事件 ></span>
+        <button style="background:rgb(223,202,77);">范围触发</button >
+        <button style="background:rgb(126,133,244);">传送点</button>
+        <button style="background:rgb(83,216,103);">站位点</button>
+   </div>
+   <div class="em_map">
+       <span>当前地图ID : </span><input type="text" style="width:80px;" disabled>
+   </div>
+   <!-- 事件区 -->
+   <div class="em_area" style="display:;">
+            <div class="em_line" style="background:rgb(223,202,77);">
+                <span>事件id:</span><input type="text" style='width:40px' maxlength="4">
+                <span>简述:</span><input type="text" style="width:324px;" maxlength="26" placeholder="一句话备注,26个字符内">
+                <span>通用触发范围:</span><input type="text" style='width:380px'>
+                <span>触发条件 > </span>
+                <span>进入:</span><input type="checkbox">
+                <span>离开:</span><input type="checkbox">
+                <span>域内移动:</span><input type="checkbox">
+                <br>
+                <span>执行方式 > </span>
+                <span>一次性:</span><input type="checkbox">
+                <span>反复:</span><input type="checkbox">
+                <br>
+                <span>目标事件 ></span>
+                <span>类型:</span>
+                <select>
+                    <option>地图</option>
+                    <option>音效</option>
+                </select>
+                <span>事件id:</span><input type="text" style="width:32px;" maxlength='4'>
+            </div>
+            <div class="em_line" style="background:rgb(126,133,244);">
+                <span>事件id:</span><input type="text" style='width:40px' maxlength="4">
+                <span>简述:</span><input type="text" style="width:324px;" maxlength="26" placeholder="一句话备注,26个字符内">
+                <span>传送触发范围:</span><input type="text" style='width:380px'>
+                <span>目标 > </span>
+                <span>地图id:</span><input type="text" style="width:32px;" maxlength='4'>
+                <span>站位id:</span><input type="text" style="width:32px;" maxlength='4'> 
+            </div>
+            <div class="em_line" style="background:rgb(83,216,103);">
+                <span>事件id:</span><input type="text" style='width:40px' maxlength="4">
+                <span>简述:</span><input type="text" style="width:324px;" maxlength="26" placeholder="一句话备注,26个字符内">
+                <span>站位范围:</span><input type="text" style='width:80px'>
+            </div>
+   </div>
+   <!-- 事件_概述明细区 不需要了 -->
+   <div class="em_area" style="display:none;">
+
+   </div>
+</div>
+
+<!-- NPC 编辑器  npc.js-->
+<div id='npc_'  style="display:none;">
+    <div class="ui_bt">
+        <div class="ui_bt_move" drag=1 dragDom=2></div>
+        <div class="ui_bt_bt">NPC编辑器</div>
+        <div class="ui_bt_zoom"></div>
+        <div class="ui_bt_close" e-event='onclick:ui_close'></div>
+   </div>
+   <!-- npc列表 -->
+    <div class="npc_list">
+         <input type="text" style="width:140px;" placeholder="创建 NPC分类 或 NPC" maxlength="15" e-change='name'>
+         <button e-event='onclick:cj_dl'>创建npc大类</button><button e-event='onclick:cj_mz'>创建npc姓名</button>
+         <button style="color:red;" e-event='ondblclick:del_dl'>删除npc大类</button><button style="color:red;" e-event='ondblclick:del_mz'>删除npc</button>
+         <br>
+         <span>NPC分类:</span>
+         <select style="width:140px;margin-left:2px;" e-event='onchange:n_fl_select' e-id='d_fl'>
+              <option e-for='npc_fl'>{{$_value}}</option>
+         </select>
+         <span>NPC姓名:</span>
+         <select style="width:120px;margin-left:2px;"  e-event='onchange:n_mz_select' e-id='d_mz'> 
+              <option e-for='npc_mz'>{{a}}</option>
+         </select>
+    </div>
+    <!-- npc 展示区 -->
+    <div class="npc_show">
+          <!-- map 格 背景-->
+         <div class="npc_map" e-id='d_bg_map'></div>
+         <!-- 逻辑 格 背景-->
+         <div class="npc_solid" e-id='d_bg_solid'></div>
+         <!-- npc渲染范围 -->
+         <div class="npc_add" e-event='onclick:addImg'>
+              <!-- npc z-index 整个固定在z-index=1 ,  -->
+              <eng style="z-index:1;">
+                <eng e-for='fps'>
+                    <img e-attr='index=$_index;src=src' e-event='onload:imgLoad;onclick:imgXz'>
+                </eng>
+              </eng>
+              <!-- 装备层 默认其下的图片 z-index=2 人物之下则为-1 -->
+              <eng>
+                   <img e-attr='index=$_index;src=src' e-event='onload:zb_imgLoad;onclick:zb_imgXz'>
+              </eng>
+              <!-- buff状态层 ,整个默认z-index=3  只提供显示-->
+              <eng style="z-index:3;">
+                   <img e-attr='index=$_index;src=src' e-event='onload:bf_imgLoad;onclick:bf_imgXz'>
+               </eng>
+              <span class="npc_buf" e-id='d_buf'></span>
+              <span class="npc_mid" e-id='d_mid' style="display:none;"></span>
+         </div>
+    </div>
+    <!-- 展示区参数 -->
+    <div class="npc_cfg">
+         <span>动作名称 > </span>
+         <select style="width:100px;" e-id='d_dz' e-event='onchange:dz_select'>
+            <option e-for='dz_fl'>{{$_value}}</option>
+         </select>
+         <input type="text" style="width:100px;" placeholder="新动作命名" e-change='dz_name'>
+         <button style="margin-left:2px;" e-event='onclick:btn_add_dz'>添加新动作</button>
+         <input type="text" style="width:40px;margin-left:20px;" disabled value="无">
+         <button style="margin-left:2px;" title="点击后,再次敲击的按键为设定值">绑定按键</button>
+         <button style="margin-left:2px;color:red;" e-event='ondblclick:btn_del_dz' title="双击删除">删除动作</button>
+         <br>
+         <!-- 类型选择区 -->
+         <div style="margin-left:0px;" class="npc_lx_check">
+            <span>动作类型 > </span>
+            <input type="checkbox" checked t='0,-1' e-event='onclick:dz_lx_mx'><span style="margin-left:2px;">自定义</span>
+            <input type="checkbox" t='0,0' e-event='onclick:dz_lx_mx'><span style="margin-left:2px;">站立</span>
+            <input type="checkbox" t='0,1' e-event='onclick:dz_lx_mx'><span style="margin-left:2px;">行走</span>
+            <input type="checkbox" t='0,2' e-event='onclick:dz_lx_mx'><span style="margin-left:2px;">哈欠/懒腰</span>
+            <input type="checkbox" t='0,3' e-event='onclick:dz_lx_mx'><span style="margin-left:2px;">攻击</span>
+            <input type="checkbox" t='0,4' e-event='onclick:dz_lx_mx'><span style="margin-left:2px;">施法</span>
+            <br>
+            <span>动作面向 > </span>
+            <input type="checkbox" checked t='1,-1' e-event='onclick:dz_lx_mx'><span style="margin-left:2px;">无面向></span>
+            <input type="checkbox" t='1,0' e-event='onclick:dz_lx_mx'><span style="margin-left:2px;">左</span>
+            <input type="checkbox" t='1,1' e-event='onclick:dz_lx_mx'><span style="margin-left:2px;">右</span>
+            <input type="checkbox" t='1,2' e-event='onclick:dz_lx_mx'><span style="margin-left:2px;">上</span>
+            <input type="checkbox" t='1,3' e-event='onclick:dz_lx_mx'><span style="margin-left:2px;">下</span>
+         </div>
+         <!-- <span style="margin-left:50px;">源:</span>
+         <select style="width:100px;margin-left:2px;" e-id='d_dz_jx'>
+            <option e-for='dz_fl2'>{{$_value}}</option>
+         </select> -->
+         <!-- <button e-event='ondblclick:dz_jx' title="基于左侧 源动作数据, 双击生成当前动作镜像!" style="color:blue;">生成当前动作侧镜</button> -->
+         
+         <br>
+            <!-- 以下 当勾选左面向镜像时, 所有禁止无法操作  修改 pointer-events属性 -->
+            <div e-base='cfg' style="margin-left:0px;">
+                    <span>总帧数</span><input type="text" style="width:20px;" maxlength="2" disabled e-change='fn'>
+                    <button style="color:red;" title="双击删除" e-event='ondblclick:del_fps'>删除帧</button><button e-event="onclick:add_fps">添加帧</button>
+                    <span>当前帧:</span><input type="text" style="width:20px;" maxlength="2" e-change='nn' disabled>
+                    <button e-event='onclick:pre_fps' title="上一帧">▲</button><button e-event='onclick:next_fps' title="下一帧">▼</button>
+                    <span>显示时间:</span><input type="text" style="width:34px;" maxlength="4" e-change='sj'>
+                    <button e-event='onclick:fps_move_pre' title="向前移动">◀</button><button e-event='onclick:fps_move_next' title="向后移动">▶</button>
+                    <button style="margin-left:16px;" e-event='onclick:play'>播放</button>
+                    <br>
+                    <span>图 > </span>
+                    <span>宽:</span><input type="text" maxlength='3' e-change='w'>
+                    <span>高:</span><input type="text" maxlength='3' e-change='h'>
+                    <span>X:</span><input type="text" maxlength='3' e-change='x'>
+                    <span>Y:</span><input type="text" maxlength='3' e-change='y'>
+                    <!-- <button>◀</button><button>▶</button><button>▲</button><button>▼</button> -->
+                    <span>镜像:</span><input type="checkbox" e-id='d_jx' e-event='onclick:xz_jx'>
+                    <span>阴影:</span><input type="checkbox" e-id='d_yy' e-event='onclick:xz_yy'>
+                    <span>位移:</span><input type="text" style="width:16px;" maxlength="1" value="0" e-change='wy'>
+                    <button style="color:red;margin-left:10px;" title="双击删除选中的图" e-event='ondblclick:img_del'>删除选中图片</button>
+                    <br>
+                    <!-- <span>Npc中心轴 ></span>
+                    <span>X:</span><input type="text" maxlength='3' e-change='x2'>
+                    <span>基于左面向:</span><input type="checkbox" checked onclick="return false"> -->
+                    <span>buff 和 状态 的 位置 ></span>
+                    <span>X:</span><input type="text" maxlength='3' e-change='x3'>
+                    <span>Y:</span><input type="text" maxlength='3' e-change='y3'>
+            </div>
+    </div>
+    <!-- 装备区 -->
+    <div class="npc_zb">
+         <div style="margin-left:0;width:100%;margin-top:0; text-align:center;background:rgb(182,193,228);">
+               装备区
+         </div>
+         <!-- 参数区 -->
+         <div class="npc_zb_xz">
+              <span>装备id</span><input type="text" style="width:50px;" maxlength="5" title="输入已有装备的id">
+              <br>
+              <span>方向></span>
+              <span>左:</span><input type="checkbox">
+              <span>右:</span><input type="checkbox">
+              <span>上:</span><input type="checkbox">
+              <span>下:</span><input type="checkbox">
+              <span>左上:</span><input type="checkbox">
+              <span>左下:</span><input type="checkbox">
+              <span>右上:</span><input type="checkbox">
+              <span>右下:</span><input type="checkbox">
+              
+         </div>
+         <!-- 装备图片区 用于选择匹配动作 -->
+         <div class="npc_zb_img_rq">
+               <eng e-for='zb_img'>
+                    <img e-attr='src=src' e-event='zb_img_xz'>
+               </eng>
+         </div>
+    </div>
+    <!-- 状态区  (状态/buff/debuff/其它特效) -->
+    <div class="npc_buff">
+
+    </div>
+</div> 
+
+<!-- 装备编辑区  -->
+<div id='eqp_' style="display: ;">
+    <div class="ui_bt">
+        <div class="ui_bt_move" drag=1 dragDom=2></div>
+        <div class="ui_bt_bt">装备编辑器</div>
+        <div class="ui_bt_zoom"></div>
+        <div class="ui_bt_close" e-event='onclick:ui_close'></div>
+   </div>
+   <!--参数区 -->
+   <div class="eqp_cfg">
+        <span>装备名称:</span><input type="text" style="width:240px;" maxlength="24">
+        <span>ID:</span><input type="text" style="width:40px;" disabled>
+        <button style="margin-left:20px;color:red;">删除</button><button style="margin-left:30px;">保存</button>
+        <div style="display:block;height:1px;"></div>
+        <span>面向 > </span>
+        <span>左:</span><input type="checkbox">
+        <span>右:</span><input type="checkbox">
+        <span>上:</span><input type="checkbox">
+        <span>下:</span><input type="checkbox">
+   </div>
+   <!-- 图片显示区 -->
+   <div class="eqp_img" e-event='add_img'>
+       <eng>
+           <img e-attr='src=src' e-event='' title="双击删除">
+       </eng>
+   </div>
+</div>
+
+
+</body>
+</html>
+
+<script>
+var say=console.log;
+//复制json
+var reNew=function(z){
+    return JSON.parse(JSON.stringify(z));
+};
+var imgLoad=null; //图片加载器    .text(imgId,index) index=>0:本源1:镜像       addArr addOne
+var IMG=[];//所有缓存的img 依据 imgId  子=>[ [img,imgJX]    ]  //imgJX当需要时
+var map=null; //map 绘制数据方法
+//唤出不同的ui时的对应操作  ,主要是数据赋值  ,以domID为id
+var G_cz={
+       //缓存 dom 用于下面的方法吊用  (在对应面板.js 内进行复制)
+       dom:{
+            //sc_path:dom   //素材面板数据源路径的inputDom =>sc_
+       },
+       fun:{//指向模板内杯的调用方法
+        //    sc_0:s         //指向 sc_
+        //    scbjFun:fun    //指向 scbjFun
+        //    uiFun:         //指向 ui_editor
+        //    xzqFun:        //指向 map_zy_xzq 地图填充资源选择器
+        //    map_bjq        //地图编辑器  (地图尺寸,命名)  map_editor.js
+        //    map_xg_Fun:    //地图数据修改  数据添加 修改选中数据 
+        //    npcFun:        //npc相关
+       },
+       //当读取项目数据成功时调用 
+       init:function(){
+           var a,b,c,d,e,f,g,i=0,l;
+               a=[
+                   './js/menubar.js', //<!-- 顶部菜单栏 -->
+                   './js/drag_zoom.js',//<!-- 拖拽支持 -->
+                   './js/ui_editor.js',//<!-- 基本按钮相关 -->
+                   './js/sc_.js',     //<!-- 素材分类导入面板 相关 -->
+                   './js/scbj_.js',   //<!-- 素材编辑面板 相关 ( 帧动图) -->
+                   './js/map_editor.js',//<!-- map编辑器   -->
+                   './js/zy_xzq.js',//<!-- 资源选择器   -->
+                   './js/img_load.js',//<!-- 地图img 资源加载    -->
+                   './js/map_xy_data.js',// <!-- 按住alt点击地图,对应坐标的数据列表信息   -->
+                   './js/blueprint.js',// <!-- 蓝图相关js  (暂废)-->
+                   './js/npc.js',      //   npc编辑器 
+                   './js/equip.js',    //  装备编辑器
+
+               ];
+               d=document.body;
+               l=a.length;
+               while(i<l){
+                   b=a[i];
+                   c=document.createElement('script');
+                   c.src=b;
+                   d.appendChild(c);
+                   i++;
+               };
+
+       },
+       //模板初始化控制区 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       //素材导入(初始导入 所有img 和 音频)
+       sc_:function(style){ //对应模板的 style
+            var t=this,dom=t.dom,fun=t.fun;
+                dom.sc_path.value=G_cfg.project.source||''; //设置默认 素材源 (记录最后一次获取地址)
+                fun.sc_0.init(); // 素材导入面板初始化
+                style.display='block';
+                
+       },
+       //素材编辑 (合成图 和 动图 编辑)
+       scbj_:function(style){ //对应模板的 style
+            var t=this,fun=t.fun.scbjFun;
+                style.display='block';
+                fun.init();
+                
+       },
+       //ui编辑器
+       ui_editor:function(style){
+        var t=this,fun=t.fun.uiFun;
+              fun.init();
+              style.display='block';
+       },
+       //地图资源选择器
+       map_sc_xzq:function(style){
+        var t=this;
+              style.display='block';
+       },
+};
+                                       
+// test  ,延迟500毫秒 自动打开 开发面板  (久其删除)
+setTimeout(function(){
+      var a,b,c,d,e;;
+        //   a='sc_'; //素材导入分类面板id
+        //   a='scbj_'; //素材编辑 (合成图和动图)
+        //   a='ui_editor';//ui编辑器
+          b=document.getElementById(a);
+          if(b){
+                c=b.style;
+                G_cz[a](c);//调用对应模板方法  a=方法名
+          };
+},500);
+
+</script>
+<script>
+//储存当前项目数据    
+var G_save=function(){
+        $_ajax({
+                type:'post',
+                dataType:'json',
+                url:'?save',
+                data:{ 
+                    data:{
+                        path:G_cfg.project.path,
+                        data:G_cfg
+                    }    
+                },
+                success:function(d){
+                },
+                error:function(d){
+                    tipFun('储存失败!!!\r项目 存储目录 遭到破坏',1);
+                }
+        });
+};
+
+</script>
+<!-- 基础 -->
+<script src="./ajax/ajax.js"></script><!-- ajax基本请求方法 -->
+<script src="./eng/eng_1.2.2_min.js"></script><!-- engJs -->
+<script src="./js/map_worker.js"></script> <!-- 地图绘制数据生成 -->
+<script src="./js/tool.js"></script><!-- 通用工具方法:  delDom ;  -->
+<script src="./js_cfg/G_cfg.js"></script><!-- G_cfg -->
+<script src="./js/img_load.js"></script><!-- 游戏内所需img加载缓存 -->
+<script src="./js/project.js"></script><!-- 项目建立和读取 -->
+<script src="./js/draw_map.js"></script><!-- 根据数据绘制地图数据 -->
+<script>
+
+</script>

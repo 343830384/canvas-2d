@@ -1,0 +1,224 @@
+/* 
+游戏编辑区域
+*/
+/* 游戏编辑区 总外框 */
+#game_area{
+    position:absolute;
+    width:fit-content;
+    min-height:600px;
+    background:rgb(0,0,0);
+    top:60px;
+    right:16px;
+    z-index:0;
+}
+/* 地图菜单栏控制 */
+.game_bar{
+    width:800px;
+    height:200px;
+    background:rgb(20,20,20);
+}
+.game_bar div{
+    display:inline-block;
+    margin-top:4px;
+    float:left;
+    height:20px;
+    line-height:20px;
+    font-size:12px;
+    font-weight:bold;
+    /* border:1px solid red; */
+}
+.game_bar span{
+     display:inline-block;
+     width:fit-content;
+     height:20px;
+     margin-left:4px;
+     text-align:right;
+     color:rgb(255,255,255);
+     vertical-align:middle;
+     /* margin-top:4px; */
+     /* border:1px solid blue; */
+}
+.game_bar select{
+     display:inline-block;
+     width:132px;
+     height:20px;
+     margin-left:4px;
+     text-align:left;
+     vertical-align:middle;
+}
+.game_bar option{
+    display:inline-block;
+    height:20px;
+    line-height:20px;
+    font-size:12px;
+    font-weight:bold;
+    text-overflow:ellipsis;
+}
+.game_bar button{
+    display:inline-block;
+    width:fit-content;
+    height:20px;
+    margin-left:4px;
+    text-align:center;
+    vertical-align:middle;
+    color:rgb(54,59,1);
+    background:rgb(193,219,230);
+}
+.game_bar button:active{
+    background:rgb(108,92,252);
+}
+.game_bar input{
+     display:inline-block;
+     width:20px;
+     height:18px;
+     vertical-align:middle;
+     margin-left:4px;
+     /* margin-top:4px; */
+}
+
+
+/*  游戏实际/实机 区域 #################################################################### */
+
+#game_main{
+    position:relative;
+    width:800px;
+    height:600px;
+    box-sizing:content-box;
+    border:1px solid blue;
+}
+#game_main canvas{
+    position:absolute;
+    display:block;
+    top:0;
+    z-index:-1;
+}
+
+/* 左侧列表区*/
+.map_list{
+    position:absolute;
+    width:120px;
+    height:100%;
+    border:1px solid red;
+    top:0;
+    /* left:-120px; */
+    background:rgb(45,45,45);
+    overflow-x:hidden;
+    overflow-y:auto;
+    transform: translate(-120px,0px);
+}
+.map_lx{
+    width:100%;
+    height:24px;
+    margin-top:6px;
+    line-height:24px;
+    text-align:center;
+    border-radius:3px;
+    background:rgb(32,136,4);
+}
+.map_lb_sj{
+    width:100%;
+    margin-top:6px;
+}
+.map_id_xz{
+    width:100%;
+    height:20px;
+    line-height:20px;
+    border-radius:5px;
+    background:rgb(174,174,222);
+}
+.map_id_xz eng{
+    display:block;
+    width:100%;
+}
+.map_id_xz span{
+    display:inline-block;
+    height:20px;
+    font-size:12px;
+    line-height:20px;
+    font-weight:bolder;
+    color:rgb(82,4,75);
+}
+.map_id_xz span:nth-child(1){
+    /* width:40px; */
+    margin-left:2px;
+}
+.map_id_xz span:nth-child(3){
+    margin-left:2px;
+}
+/* 左侧列表区 选择,对应的下放 属性修改总区域 */
+.m_l_opt_area{
+    position: absolute;
+    width:800px;
+    height:100px;
+    background:rgb(217,216,217);
+    border-radius:4px;
+    box-shadow: 10px 10px 5px #888888;;
+    transform: translate(-120px,0px);
+}
+.m_l_opt{
+    position:absolute;
+    width:100%;
+    height:100%;
+    font-size:12px;
+    font-weight:bolder;
+}
+.m_l_opt span{
+    display:inline-block;
+    width:fit-content;
+    height:20px;
+    line-height:20px;
+    float: left;
+    margin-top:4px;
+    margin-left:10px;
+}
+.m_l_opt input{
+    display:inline-block;
+    width:40px;
+    height:20px;
+    line-height:20px;
+    float: left;
+    margin-top:4px;
+    margin-left:6px;
+}
+.m_l_opt button{
+    display:inline-block;
+    width:fit-content;
+    height:20px;
+    line-height:20px;
+    float: left;
+    margin-top:4px;
+    margin-left:10px;
+}
+/* 删除地图数据按钮 */
+.m_ld_del{
+   position: absolute;
+   width:40px !important;
+   height:20px;
+   right:10px;
+   top:4px;
+   line-height:20px;
+   text-align:center;
+   color:red;
+}
+/* 地图数据前移按钮 */
+.m_ld_up{
+    position: absolute;
+    width:40px !important;
+    height:20px;
+    right:60px;
+    bottom:8px;
+    line-height:20px;
+    text-align:center;
+    color:blue;
+}
+/* 地图数据后移按钮 */
+.m_ld_down{
+    position: absolute;
+    width:40px !important;
+    height:20px;
+    right:10px;
+    bottom:8px;
+    line-height:20px;
+    text-align:center;
+    color:blue;
+}
